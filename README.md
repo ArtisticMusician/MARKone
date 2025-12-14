@@ -1,9 +1,11 @@
 <div align="center">
-  <img src="gitimages/MARKone_LogoWht.png" alt="MARKone Logo" style="max-width: 100%; border: none margin: 2rem 0;>
+  <img src="gitimages/MARKone_LogoWht.png" alt="MARKone Logo" style="max-width: 100%; border: none; margin: 2rem 0;">
   
   # MARKone - Single File Portable Markdown Editor
   
   A feature-rich, browser-based Markdown editor with live preview and theming support.
+
+  <img src="gitimages/MARKone_screenashot.png" alt="MARKone Screenshot" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px; margin: 2rem 0;">
 </div>
 
 ## MarkOne.html is the only file you need to run the markdown editor.
@@ -34,7 +36,7 @@
 ### Editor Features
 - Live Markdown preview
 - Source code view
-- Can write in the Code Pane or the Preview Pane.
+- Can write in the Code Pane or the Preview Pane
 - Word, character, and paragraph counting
 - Selection statistics
 - Undo/Redo functionality
@@ -49,14 +51,10 @@
 
 ### Additional Tools
 - Built-in Markdown cheatsheet
-- Copy HTML functionality
+- Copy Markdown functionality
 - Syntax highlighting for code blocks
 - Paragraph, Sentence, Word, Character Counter
-- Keyword Density Checker: Highlight a word and it will tell you the number of occurances that word appears and %.
-
-<div align="center">
-  <img src="gitimages/MARKone_screenashot.png" alt="MARKone Screenshot" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px; margin: 2rem 0;">
-</div>
+- Keyword Density Checker: Highlight a word and it will tell you the number of occurrences that word appears and the percentage.
 
 ## License
 Copyright © Josh McCann. 
