@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="gitimages/MARKone_Logo.svg" alt="MARKone Logo" width="300">
+  <img src="gitimages/MARKone_Logo.svg" alt="MARKone Logo" width="300" style="filter: brightness(0) invert(1);">
   
   # MARKone - Single File Portable Markdown Editor
   
