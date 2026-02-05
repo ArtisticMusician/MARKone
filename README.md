@@ -12,6 +12,10 @@
 
 ## Features
 
+### New Features
+- Drag and Drop: You can now open a markdown file by dragging the file into MARKOne
+- Export PDF: Added the ability to export your MD file to PDF
+
 ### File Operations
 - Create new Markdown files
 - Open existing files

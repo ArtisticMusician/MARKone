@@ -10,6 +10,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -169,6 +170,9 @@
                     </button>
                     <button onclick="fileSaveAs()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
                         <i class="fas fa-file-export"></i> Save As...
+                    </button>
+                    <button onclick="exportPDF()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-file-pdf"></i> Export PDF
                     </button>
                     <div class="border-t mt-1" style="border-color: var(--border-color)"></div>
                     <div class="px-4 py-2 text-[10px] uppercase font-bold opacity-50">Credits & License</div>
@@ -786,6 +790,29 @@
             });
         }
         
+        function exportPDF() {
+            // Get the preview HTML content
+            const element = document.getElementById('preview');
+            const filename = currentFileName.replace(/\.[^/.]+$/, "") + '.pdf';
+            
+            // PDF options
+            const opt = {
+                margin:       10,
+                filename:     filename,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Generate PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                console.log('PDF generated successfully');
+            }).catch(err => {
+                console.error('PDF generation failed:', err);
+                alert('PDF generation failed. Please try again.');
+            });
+        }
+        
         function toggleTheme() {
             document.body.classList.toggle('dark');
             const icon = document.getElementById('themeIcon');
@@ -1016,6 +1043,67 @@
                 }
             }
         });
+
+        // Drag and drop functionality
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'copy';
+            document.body.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!e.relatedTarget || !document.body.contains(e.relatedTarget)) {
+                document.body.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.body.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length === 0) return;
+            
+            const file = files[0];
+            if (!file.name.match(/\.(md|txt|markdown)$/i)) {
+                alert('Please drop a Markdown (.md, .txt) file.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                editor.value = event.target.result;
+                currentFileName = file.name;
+                document.getElementById('currentFileName').textContent = currentFileName;
+                addToRecent(currentFileName, editor.value);
+                updatePreview();
+                updateStats();
+            };
+            reader.readAsText(file);
+        }
+
+        // Add drag-and-drop event listeners
+        document.addEventListener('dragover', handleDragOver);
+        document.addEventListener('dragleave', handleDragLeave);
+        document.addEventListener('drop', handleDrop);
+
+        // Add CSS for drag-over state
+        const style = document.createElement('style');
+        style.textContent = `
+            .drag-over {
+                outline: 3px dashed #3b82f6 !important;
+                outline-offset: -10px;
+                background-color: rgba(59, 130, 246, 0.05) !important;
+            }
+            .drag-over * {
+                pointer-events: none;
+            }
+        `;
+        document.head.appendChild(style);
 
         // Initial update
         updateStats();
