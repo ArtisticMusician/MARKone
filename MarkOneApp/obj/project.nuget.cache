@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "CPZuqO4m6Is=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Josh\\Documents\\0000000000-MyApps\\MarkOne\\MarkOneApp\\MarkOneApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Josh\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.28\\microsoft.net.illink.tasks.8.0.28.nupkg.sha512"
+  ],
+  "logs": []
+}

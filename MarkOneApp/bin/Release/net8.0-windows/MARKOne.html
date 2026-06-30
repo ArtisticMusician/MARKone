@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARKone</title>
+    
+    <!-- Favicon (Base64 encoded SVG of your logo) -->
+    <link rel="icon" type="image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJNYXJrT25lX0xvZ28iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE0NCAxMzkuOSI+PGcgaWQ9Ik1hcmtPbmVfTG9nby0yIj48cGF0aCBkPSJNMTQzLjQuN3YxMDIuNGgtMS45Yy0yLDAtMy42LTEuNi0zLjYtMy42VjEzLjRjMC0uMy0uMi0uNS0uNS0uNWgtNi43Yy0uMiwwLS40LjItLjUuNC0yLDguMi05LjEsMTQuMy0xNy44LDE0LjgtLjMsMC0uNS4yLS41LjV2MTEuNWMwLC4zLjIuNS41LjVoMTAuNmMuMywwLC41LjIuNS41djU4LjRjMCwyLTEuNiwzLjYtMy42LDMuNmgtNC4yYy0uMywwLS41LjItLjUuNXYzLjloLTEzbC0uNi01MGMwLS41LS43LS43LS45LS4ybC0yMi41LDUwLjJjLTYuMSwwLTcuNCwwLTEzLjYsMGwtMjIuMy01MGMtLjItLjUtLjktLjMtLjkuMmwtLjIsNDkuOEguMkwwLC41YzAtLjMuMi0uNS41LS41aDQwLjZjLjIsMCwuNC4xLjQuM2wyOS42LDY4LjdjLjIuNC43LjQuOSwwTDEwMS44LjNjMC0uMi4zLS4zLjQuLTNsNDAuNy4yYy4zLDAsLjUuMi41LjVaTTc0LjksMTM5LjhoLTcuOGwtMy4xLTEyLjR2MTIuNGgtMTQuN3YtOS42YzAtMS42LS4xLTIuNS0uNC0yLjktLjItLjQtLjktLjYtMS45LS42djEzLjFoLTEzLjhbLS40LTUuMmgtMi43bC0uNSw1LjJoLTEzdi0xOS42cy0yLjYsMTkuNi0yLjYsMTkuNmgtNC43bC0yLjgtMTkuMXYxOS4xSDB2LTI5aDkuOGMuMywxLjcuNiwzLjguOSw2LjJsMS4xLDcuNCwxLjctMTMuNmg5Ljh2MTguMmwyLjQtMTguMmgxMC45bDIuOCwxOS4xdi0xOS4xaDUuM2MzLjYsMCw3LC4xLDguMi40LDEuMy4zLDIuMywxLDMuMSwyLjEuMS4yLjIuNC40LjZ2LTMuMWg3LjV2MTEuM2wzLjQtMTEuM2g3LjFsLTQuMywxMy4xLDQuNywxNS45Wk0zMi42LDEyOS41Yy0uNC0zLjMtLjgtNy4zLTEuMS0xMi4yLS44LDUuNi0xLjMsOS42LTEuNCwxMi4yaDIuNlpNNDkuMywxMThjMC0uOS0uMi0xLjUtLjUtMS44cy0uOS0uNC0xLjgtLjR2Ni41Yy44LDAsMS40LS4xLDEuOC0uMy4zLS4yLjUtMSwuNS0yLjN2LTEuNlpNNTYuNSwxMjYuNnYtMy4zczAsMCwwLDBjLS42LjgtMS43LDEuMi0zLjMsMS40LDEuNS40LDIuNS45LDMsMS41LjEuMS4yLjMuMy40Wk0xMjQsMTM1LjdoMjB2NC4xaC0yMHYtNC4xWk0xNDQsMTExdjQuMWgtMjB2LTQuMWgyMFpNMTI0LDEyMi45aDIwdjQuMWgtMjB2LTQuMVpNNzYsMTMxLjJjLjcsMS43LDEuNiwzLjIsMi43LDQuNSwxLjIsMS4zLDIuNSwyLjMsNC4xLDMuMSwxLjUuOCwzLjIsMS4xLDUsMS4xaDUuOWMxLjUsMCwyLjktLjMsNC4yLS44LDEuMy0uNSwyLjUtMS4zLDMuNi0yLjIsMS4xLS45LDItMi4xLDIuOC0zLjQuOC0xLjMsMS4zLTIuNywxLjctNC4ybC0zLjItMy43YzAsMS40LS4yLDIuNy0uNyw0LS41LDEuMi0xLjEsMi4zLTEuOSwzLjMtLjguOS0xLjgsMS43LTIuOSwyLjItMS4xLjUtMi4zLjgtMy42LjhoLTZjLTEuMywwLTIuNC0uMy0zLjYtLjhzLTIuMS0xLjMtMi45LTIuMi0xLjUtMi0yLTMuMi0uNy0yLjYtLjctNCwuMi0yLjcuNy0zLjljLjUtMS4yLDEuMS0yLjMsMi0zLjNzMS44LTEuNywyLjktMi4yYzEuMS0uNSwyLjMtLjgsMy42LS44aDguNGMxLjksMi4yLDMuOCw0LjMsNS41LDYuMiwxLjcsMiwzLjQsMy44LDQuOSw1LjYsMS4zLDEuNSwyLjYsMywzLjksNC40LDEuMywxLjUsMi40LDIuOCwzLjUsMy45LDEsMS4yLDEuOSwyLjEsMi42LDIuOWwxLjIsMS4zaDMuOHYtMjguNWgtMy44djIyLjZsLTE5LjktMjIuNmgtMTBjLTEuOCwwLTMuNC40LTUsMS4xLTEuNi44LTIuOSwxLjgtNC4xLDMuMS0xLjEsMS4zLTIuMSwyLjgtMi43LDQuNS0uNywxLjctMSwzLjYtMSw1LjVzLjMsMy44LDEsNS42WiIvPjwvZz48L3N2Zz4=">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #e6e6e6;
+            --bg-tertiary: #e5e5e5;
+            --text-primary: #171717;
+            --text-secondary: #525252;
+            --border-color: #585858;
+            --hover-bg: #e5e5e5;
+        }
+        
+        .dark {
+            --bg-primary: #171717;
+            --bg-secondary: #4d4d4d;
+            --bg-tertiary: #404040;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a3a3a3;
+            --border-color: #9e9e9e;
+            --hover-bg: #404040;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .editor-container {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+        
+        .toolbar {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+        
+        .toolbar button {
+            color: var(--text-primary);
+            background-color: transparent;
+        }
+        
+        .toolbar button:hover {
+            background-color: var(--hover-bg);
+        }
+        
+        .editor-textarea {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+        
+        .preview-pane {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+        
+        .footer-stats {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+        }
+        
+        .modal-bg {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content {
+            background-color: var(--bg-primary);
+            border-color: var(--border-color);
+        }
+        
+        .cheatsheet-item {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+        
+        .color-picker-dropdown {
+            background-color: var(--bg-primary);
+            border-color: var(--border-color);
+        }
+        
+        .preview-pane h1 { font-size: 2em; font-weight: bold; margin: 0.67em 0; }
+        .preview-pane h2 { font-size: 1.5em; font-weight: bold; margin: 0.75em 0; }
+        .preview-pane h3 { font-size: 1.17em; font-weight: bold; margin: 0.83em 0; }
+        .preview-pane h4 { font-size: 1em; font-weight: bold; margin: 1.12em 0; }
+        .preview-pane h5 { font-size: 0.83em; font-weight: bold; margin: 1.5em 0; }
+        .preview-pane h6 { font-size: 0.75em; font-weight: bold; margin: 1.67em 0; }
+        .preview-pane p { margin: 1em 0; }
+        .preview-pane ul { list-style-type: disc; padding-left: 2em; margin: 1em 0; }
+        .preview-pane ol { list-style-type: decimal; padding-left: 2em; margin: 1em 0; }
+        .preview-pane blockquote { border-left: 4px solid var(--border-color); padding-left: 1em; margin: 1em 0; color: var(--text-secondary); }
+        .preview-pane code { background-color: var(--bg-tertiary); padding: 0.2em 0.4em; border-radius: 3px; font-family: monospace; }
+        .preview-pane pre { background-color: var(--bg-tertiary); padding: 1em; border-radius: 5px; overflow-x: auto; }
+        .preview-pane pre code { background-color: transparent; padding: 0; }
+        .preview-pane a { color: #525252; text-decoration: underline; }
+        .preview-pane img { max-width: 100%; height: auto; }
+        .preview-pane input[type="checkbox"] { margin-right: 0.5em; }
+        .preview-pane del { text-decoration: line-through; }
+        
+        .separator {
+            width: 1px;
+            height: 24px;
+            background-color: var(--border-color);
+            margin: 0 4px;
+        }
+        
+        .dropdown-menu {
+            background-color: var(--bg-primary);
+            border-color: var(--border-color);
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--hover-bg);
+        }
+        
+        .source-code-view {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col dark">
+    <div class="flex-1 flex flex-col p-4 gap-4">
+        <!-- Toolbar -->
+        <div class="toolbar border rounded-lg p-2 flex flex-wrap items-center gap-1 sticky top-0 z-10 bg-secondary">
+            
+            <!-- MARKONE LOGO -->
+            <div class="mr-3 flex items-center select-none cursor-default" title="MARKone">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 139.9" class="h-12 w-auto dark: transition-all">
+                    <path fill="var(--text-primary)" d="M143.4.7v102.4h-1.9c-2,0-3.6-1.6-3.6-3.6V13.4c0-.3-.2-.5-.5-.5h-6.7c-.2,0-.4.2-.5.4-2,8.2-9.1,14.3-17.8,14.8-.3,0-.5.2-.5.5v11.5c0,.3.2.5.5.5h10.6c.3,0,.5.2.5.5v58.4c0,2-1.6,3.6-3.6,3.6h-4.2c-.3,0-.5.2-.5.5v3.9h-13l-.6-50c0-.5-.7-.7-.9-.2l-22.5,50.2h-13.6l-22.3-50c-.2-.5-.9-.3-.9.2l-.2,49.8H.2L0,.5C0,.2.2,0,.5,0h40.6c.2,0,.4.1.4.3l29.6,68.7c.2.4.7.4.9,0L101.8.3c0-.2.3-.3.4-.3l40.7.2c.3,0,.5.2.5.5h0ZM124,135.7h20v4.1h-20v-4.1ZM144,111v4.1h-20v-4.1h20ZM124,122.9h20v4.1h-20v-4.1ZM76,131.2c.7,1.7,1.6,3.2,2.7,4.5,1.2,1.3,2.5,2.3,4.1,3.1,1.5.8,3.2,1.1,5,1.1h5.9c1.5,0,2.9-.3,4.2-.8,1.3-.5,2.5-1.3,3.6-2.2s2-2.1,2.8-3.4c.8-1.3,1.3-2.7,1.7-4.2l-3.2-3.7c0,1.4-.2,2.7-.7,4-.5,1.2-1.1,2.3-1.9,3.3-.8.9-1.8,1.7-2.9,2.2s-2.3.8-3.6.8h-6c-1.3,0-2.4-.3-3.6-.8s-2.1-1.3-2.9-2.2-1.5-2-2-3.2-.7-2.6-.7-4,.2-2.7.7-3.9c.5-1.2,1.1-2.3,2-3.3s1.8-1.7,2.9-2.2,2.3-.8,3.6-.8h8.4c1.9,2.2,3.8,4.3,5.5,6.2,1.7,2,3.4,3.8,4.9,5.6,1.3,1.5,2.6,3,3.9,4.4,1.3,1.5,2.4,2.8,3.5,3.9,1,1.2,1.9,2.1,2.6,2.9l1.2,1.3h3.8v-28.5h-3.8v22.6l-19.9-22.6h-10c-1.8,0-3.4.4-5,1.1-1.6.8-2.9,1.8-4.1,3.1-1.1,1.3-2.1,2.8-2.7,4.5-.7,1.7-1,3.6-1,5.5s.3,3.8,1,5.6h0ZM23.3,113.1l-.4-1.2h-3.9l-7.9,22.7-8-22.7H0v28h3v-18.7l6.5,18.7h3l8.3-23.8.7,1.9,1.8-5ZM33.9,139.9h3.3l-9.9-28h-2.6l-9.9,28h13.2l-1.4-4h-7l6.4-18.1,7.8,22.1ZM51.7,123.5c.4,0,.7,0,1.1-.3s.6-.5.9-.8c.3-.3.4-.7.6-1.2.1-.5.2-1,.2-1.5s0-1-.2-1.5-.3-.9-.6-1.2c-.3-.4-.5-.6-.9-.8s-.7-.3-1.1-.3h-21.7l-1.4-4h23.1c.8,0,1.5.2,2.2.6.7.4,1.3,1,1.8,1.7.5.7.9,1.5,1.2,2.5.3,1,.4,2,.4,3.1s-.1,2-.4,3c-.3.9-.7,1.8-1.2,2.5-.6.9-1.5,1.6-2.5,2s-2.2.3-3.4.3l7.5,12.4h-3.7l-7.5-12.4h-4.5v12.4h-3v-16.4h13.1ZM58.8,139.9v-28h3v21.8l13.2-21.8h3.8l-16.9,28h-3ZM71.4,127.9l7.3,12h-3.8l-5.4-8.9,1.9-3.1ZM24.3,125.8l5.1,14.1h3.4l-6.7-19-1.7,4.9Z"/>
+                </svg>
+            </div>
+
+            <!-- Hamburger File Menu -->
+            <div class="relative group">
+                <button class="px-3 py-1.5 rounded hover:bg-gray-200 cursor-pointer" title="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="dropdown-menu absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden group-hover:block min-w-[180px]">
+                    <div class="px-4 py-2 text-[10px] uppercase font-bold opacity-50 border-b" style="border-color: var(--border-color)">File</div>
+                    <button onclick="fileNew()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-file"></i> New <span class="ml-auto text-xs opacity-50">Ctrl+N</span>
+                    </button>
+                    <button onclick="fileOpen()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-sun" id="themeIcon"></i> Open <span class="ml-auto text-xs opacity-50">Ctrl+O</span>
+                    </button>
+                    <div id="recentFilesMenu" class="border-t mt-1" style="border-color: var(--border-color)">
+                        <div class="px-4 py-1 text-[10px] uppercase font-bold opacity-50">Recent</div>
+                        <!-- Recent items injected here -->
+                    </div>
+                    <div class="border-t mt-1" style="border-color: var(--border-color)"></div>
+                    <button onclick="fileSave()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-save"></i> Save <span class="ml-auto text-xs opacity-50">Ctrl+S</span>
+                    </button>
+                    <button onclick="fileSaveAs()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-file-export"></i> Save As...
+                    </button>
+                    <button onclick="exportPDF()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                    <button onclick="exportTxt()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i> Export Text
+                    </button>
+                    <button onclick="exportHtml()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-file-code"></i> Export HTML
+                    </button>
+                    <div class="border-t mt-1" style="border-color: var(--border-color)"></div>
+                    <div class="px-4 py-2 text-[10px] uppercase font-bold opacity-50">Credits & License</div>
+                    <div class="px-4 py-2 text-xs text-gray-600 dark:text-gray-400">
+                        Copyright © Josh McCann.<br>
+                        Permission is hereby granted to use this software for free for open source and non-commercial purposes. Commercial usage is strictly prohibited without prior permission. Please contact the developer via GitHub for licensing inquiries.
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-2 text-xs italic opacity-50 truncate max-w-[150px] border-r pr-3 mr-2" style="border-color: var(--border-color)" id="currentFileName">Untitled.md</div>
+            
+            <!-- Headings Dropdown -->
+            <div class="relative">
+                <button id="headingBtn" class="px-3 py-1.5 rounded hover:bg-gray-200 text-sm font-medium" title="Headings">
+                    <i class="fas fa-heading"></i>
+                    <i class="fas fa-chevron-down text-xs ml-1"></i>
+                </button>
+                <div id="headingDropdown" class="dropdown-menu absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden min-w-[150px]">
+                    <button class="dropdown-item w-full text-left px-3 py-2 text-2xl font-bold" onclick="insertHeading(1)">Heading 1</button>
+                    <button class="dropdown-item w-full text-left px-3 py-2 text-xl font-bold" onclick="insertHeading(2)">Heading 2</button>
+                    <button class="dropdown-item w-full text-left px-3 py-2 text-lg font-bold" onclick="insertHeading(3)">Heading 3</button>
+                    <button class="dropdown-item w-full text-left px-3 py-2 text-base font-bold" onclick="insertHeading(4)">Heading 4</button>
+                    <button class="dropdown-item w-full text-left px-3 py-2 text-sm font-bold" onclick="insertHeading(5)">Heading 5</button>
+                    <button class="dropdown-item w-full text-left px-3 py-2 text-xs font-bold" onclick="insertHeading(6)">Heading 6</button>
+                </div>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <button onclick="insertFormat('**', '**')" class="px-3 py-1.5 rounded" title="Bold (Ctrl+B)">
+                <i class="fas fa-bold"></i>
+            </button>
+            <button onclick="insertFormat('*', '*')" class="px-3 py-1.5 rounded" title="Italic (Ctrl+I)">
+                <i class="fas fa-italic"></i>
+            </button>
+            <button onclick="insertFormat('~~', '~~')" class="px-3 py-1.5 rounded" title="Strikethrough">
+                <i class="fas fa-strikethrough"></i>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button onclick="insertList('ordered')" class="px-3 py-1.5 rounded" title="Ordered List">
+                <i class="fas fa-list-ol"></i>
+            </button>
+            <button onclick="insertList('unordered')" class="px-3 py-1.5 rounded" title="Unordered List">
+                <i class="fas fa-list-ul"></i>
+            </button>
+            <button onclick="insertList('checklist')" class="px-3 py-1.5 rounded" title="Checklist">
+                <i class="fas fa-tasks"></i>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button onclick="insertQuote()" class="px-3 py-1.5 rounded" title="Quote">
+                <i class="fas fa-quote-left"></i>
+            </button>
+            <button onclick="insertCodeBlock()" class="px-3 py-1.5 rounded" title="Code Block">
+                <i class="fas fa-code"></i>
+            </button>
+            <button onclick="insertFormat('`', '`')" class="px-3 py-1.5 rounded" title="Inline Code">
+                <i class="fas fa-terminal"></i>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button onclick="insertLink()" class="px-3 py-1.5 rounded" title="Add Link">
+                <i class="fas fa-link"></i>
+            </button>
+            <button onclick="insertImage()" class="px-3 py-1.5 rounded" title="Add Image">
+                <i class="fas fa-image"></i>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <!-- Text Color -->
+            <div class="relative">
+                <button id="textColorBtn" class="px-3 py-1.5 rounded" title="Text Color">
+                    <i class="fas fa-font"></i>
+                    <span id="textColorIndicator" class="block h-1 w-full mt-0.5 rounded" style="background-color: #ef4444;"></span>
+                </button>
+                <div id="textColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2">
+                    <div class="grid grid-cols-6 gap-1">
+                        <button onclick="applyTextColor('#ef4444')" class="w-6 h-6 rounded" style="background-color: #ef4444;"></button>
+                        <button onclick="applyTextColor('#f97316')" class="w-6 h-6 rounded" style="background-color: #f97316;"></button>
+                        <button onclick="applyTextColor('#eab308')" class="w-6 h-6 rounded" style="background-color: #eab308;"></button>
+                        <button onclick="applyTextColor('#22c55e')" class="w-6 h-6 rounded" style="background-color: #22c55e;"></button>
+                        <button onclick="applyTextColor('#3b82f6')" class="w-6 h-6 rounded" style="background-color: #3b82f6;"></button>
+                        <button onclick="applyTextColor('#8b5cf6')" class="w-6 h-6 rounded" style="background-color: #8b5cf6;"></button>
+                        <button onclick="applyTextColor('#ec4899')" class="w-6 h-6 rounded" style="background-color: #ec4899;"></button>
+                        <button onclick="applyTextColor('#6b7280')" class="w-6 h-6 rounded" style="background-color: #6b7280;"></button>
+                        <button onclick="applyTextColor('#000000')" class="w-6 h-6 rounded border" style="background-color: #000000;"></button>
+                        <button onclick="applyTextColor('#ffffff')" class="w-6 h-6 rounded border" style="background-color: #ffffff;"></button>
+                        <button onclick="applyTextColor('#06b6d4')" class="w-6 h-6 rounded" style="background-color: #06b6d4;"></button>
+                        <button onclick="applyTextColor('#84cc16')" class="w-6 h-6 rounded" style="background-color: #84cc16;"></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Highlight Color -->
+            <div class="relative">
+                <button id="highlightColorBtn" class="px-3 py-1.5 rounded" title="Highlight Color">
+                    <i class="fas fa-highlighter"></i>
+                    <span id="highlightColorIndicator" class="block h-1 w-full mt-0.5 rounded" style="background-color: #fef08a;"></span>
+                </button>
+                <div id="highlightColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2">
+                    <div class="grid grid-cols-6 gap-1">
+                        <button onclick="applyHighlightColor('#fef08a')" class="w-6 h-6 rounded" style="background-color: #fef08a;"></button>
+                        <button onclick="applyHighlightColor('#bbf7d0')" class="w-6 h-6 rounded" style="background-color: #bbf7d0;"></button>
+                        <button onclick="applyHighlightColor('#bfdbfe')" class="w-6 h-6 rounded" style="background-color: #bfdbfe;"></button>
+                        <button onclick="applyHighlightColor('#fecaca')" class="w-6 h-6 rounded" style="background-color: #fecaca;"></button>
+                        <button onclick="applyHighlightColor('#e9d5ff')" class="w-6 h-6 rounded" style="background-color: #e9d5ff;"></button>
+                        <button onclick="applyHighlightColor('#fed7aa')" class="w-6 h-6 rounded" style="background-color: #fed7aa;"></button>
+                        <button onclick="applyHighlightColor('#fbcfe8')" class="w-6 h-6 rounded" style="background-color: #fbcfe8;"></button>
+                        <button onclick="applyHighlightColor('#a5f3fc')" class="w-6 h-6 rounded" style="background-color: #a5f3fc;"></button>
+                        <button onclick="applyHighlightColor('#d1d5db')" class="w-6 h-6 rounded" style="background-color: #d1d5db;"></button>
+                        <button onclick="applyHighlightColor('#fcd34d')" class="w-6 h-6 rounded" style="background-color: #fcd34d;"></button>
+                        <button onclick="applyHighlightColor('#c4b5fd')" class="w-6 h-6 rounded" style="background-color: #c4b5fd;"></button>
+                        <button onclick="applyHighlightColor('#99f6e4')" class="w-6 h-6 rounded" style="background-color: #99f6e4;"></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Background Color -->
+            <div class="relative">
+                <button id="bgColorBtn" class="px-3 py-1.5 rounded" title="Background Color">
+                    <i class="fas fa-fill-drip"></i>
+                    <span id="bgColorIndicator" class="block h-1 w-full mt-0.5 rounded" style="background-color: #dbeafe;"></span>
+                </button>
+                <div id="bgColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2">
+                    <div class="grid grid-cols-6 gap-1">
+                        <button onclick="applyBgColor('#fee2e2')" class="w-6 h-6 rounded" style="background-color: #fee2e2;"></button>
+                        <button onclick="applyBgColor('#ffedd5')" class="w-6 h-6 rounded" style="background-color: #ffedd5;"></button>
+                        <button onclick="applyBgColor('#fef9c3')" class="w-6 h-6 rounded" style="background-color: #fef9c3;"></button>
+                        <button onclick="applyBgColor('#dcfce7')" class="w-6 h-6 rounded" style="background-color: #dcfce7;"></button>
+                        <button onclick="applyBgColor('#dbeafe')" class="w-6 h-6 rounded" style="background-color: #dbeafe;"></button>
+                        <button onclick="applyBgColor('#ede9fe')" class="w-6 h-6 rounded" style="background-color: #ede9fe;"></button>
+                        <button onclick="applyBgColor('#fce7f3')" class="w-6 h-6 rounded" style="background-color: #fce7f3;"></button>
+                        <button onclick="applyBgColor('#f3f4f6')" class="w-6 h-6 rounded" style="background-color: #f3f4f6;"></button>
+                        <button onclick="applyBgColor('#e5e7eb')" class="w-6 h-6 rounded" style="background-color: #e5e7eb;"></button>
+                        <button onclick="applyBgColor('#cffafe')" class="w-6 h-6 rounded" style="background-color: #cffafe;"></button>
+                        <button onclick="applyBgColor('#ecfccb')" class="w-6 h-6 rounded" style="background-color: #ecfccb;"></button>
+                        <button onclick="applyBgColor('#ffffff')" class="w-6 h-6 rounded border" style="background-color: #ffffff;"></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <button onclick="document.execCommand('undo')" class="px-3 py-1.5 rounded text-xl" title="Undo (Ctrl+Z)">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button onclick="document.execCommand('redo')" class="px-3 py-1.5 rounded text-xl" title="Redo (Ctrl+Y)">
+                <i class="fas fa-redo"></i>
+            </button>
+            
+            <div class="flex-1"></div>
+            
+            <div class="flex gap-2">
+                <button onclick="toggleSourceView()" id="sourceViewBtn" class="px-2 py-1 rounded text-xs hover:bg-gray-200" title="View Source HTML">
+                    <i class="fas fa-code"></i> View Code
+                </button>
+                <button onclick="copyCode()" class="px-2 py-1 rounded text-xs hover:bg-gray-200" title="Copy HTML">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <button onclick="showCheatsheet()" class="px-3 py-1.5 rounded text-xl" title="Markdown Cheatsheet">
+                <i class="fas fa-question-circle"></i>
+            </button>
+            
+            <button onclick="toggleTheme()" class="px-3 py-1.5 rounded text-xl" title="Toggle Theme">
+                <i id="themeIcon" class="fas fa-moon"></i>
+            </button>
+            
+        </div>
+        
+        <!-- Editor and Preview -->
+        <div class="flex-1 flex gap-4 min-h-0">
+            <!-- Editor -->
+            <div class="flex-1 flex flex-col border rounded-lg editor-container">
+                <div class="px-3 py-2 border-b font-medium text-sm" style="border-color: var(--border-color); color: var(--text-secondary);">
+                    MARKone Markdown
+                </div>
+                <textarea id="editor" class="editor-textarea flex-1 p-4 resize-none outline-none font-mono text-sm overflow-y-auto" placeholder="Start writing your markdown here..."></textarea>
+            </div>
+            
+            <!-- Preview -->
+            <div class="flex-1 flex flex-col border rounded-lg editor-container">
+                <div class="px-3 py-2 border-b font-medium text-sm flex items-center justify-between" style="border-color: var(--border-color); color: var(--text-secondary);">
+                    <span>MARKone Preview</span>
+                    
+                </div>
+                <div id="preview" class="preview-pane flex-1 p-4 overflow-auto" contenteditable="true" spellcheck="false"></div>
+                <pre id="sourceView" class="source-code-view flex-1 p-4 overflow-auto text-sm font-mono hidden whitespace-pre-wrap"></pre>
+            </div>
+        </div>
+        
+        <!-- Footer Stats -->
+        <div class="footer-stats border rounded-lg px-4 py-2 flex flex-wrap items-center gap-4 text-sm sticky bottom-0 z-10 bg-secondary">
+            <span><strong>Paragraphs:</strong> <span id="paragraphCount">0</span></span>
+            <span><strong>Sentences:</strong> <span id="sentenceCount">0</span></span>
+            <span><strong>Words:</strong> <span id="wordCount">0</span></span>
+            <span><strong>Characters (with spaces):</strong> <span id="charCountSpaces">0</span></span>
+            <span><strong>Characters (no spaces):</strong> <span id="charCountNoSpaces">0</span></span>
+            <div class="flex-1"></div>
+            <span id="selectionStats" class="text-right"></span>
+        </div>
+    </div>
+    
+    <!-- Cheatsheet Modal -->
+    <div id="cheatsheetModal" class="modal-bg fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="modal-content border rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between px-6 py-4 border-b" style="border-color: var(--border-color);">
+                <h2 class="text-xl font-bold">Markdown Cheatsheet</h2>
+                <button onclick="hideCheatsheet()" class="p-2 rounded hover:bg-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-auto flex-1 grid gap-3">
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm"># Heading 1</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Heading 1</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">## Heading 2</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Heading 2</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">**bold**</code>
+                        <span class="text-sm font-bold">bold</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">*italic*</code>
+                        <span class="text-sm italic">italic</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">~~strikethrough~~</code>
+                        <span class="text-sm line-through">strikethrough</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">`inline code`</code>
+                        <code class="text-sm px-1 rounded" style="background: var(--bg-tertiary);">inline code</code>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">```code block```</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Code block</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">[link](url)</code>
+                        <span class="text-sm underline">link</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">![alt](image-url)</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Image</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">> quote</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Blockquote</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">- item</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Unordered list</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">1. item</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Ordered list</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">- [ ] task</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Checklist</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">---</code>
+                        <span class="text-sm" style="color: var(--text-secondary);">Horizontal rule</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">&lt;span style="color:red"&gt;text&lt;/span&gt;</code>
+                        <span class="text-sm" style="color: red;">Colored text</span>
+                    </div>
+                </div>
+                <div class="cheatsheet-item p-3 rounded border">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm">&lt;mark style="background:yellow"&gt;text&lt;/mark&gt;</code>
+                        <mark style="background: yellow;">Highlighted</mark>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const sourceView = document.getElementById('sourceView');
+        let isSourceView = false;
+        
+        // Configure marked
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+        
+        // Update preview on input
+        editor.addEventListener('input', updatePreview);
+        editor.addEventListener('input', updateStats);
+        editor.addEventListener('mouseup', checkSelection);
+        editor.addEventListener('keyup', checkSelection);
+
+        // Edit from Preview logic
+        let isSyncing = false;
+        preview.addEventListener('input', () => {
+            if (isSyncing) return;
+            isSyncing = true;
+            
+            // Simple HTML to MD approximation for live editing
+            let html = preview.innerHTML;
+            
+            let md = html
+                .replace(/<h1>(.*?)<\/h1>/gi, '# $1\n')
+                .replace(/<h2>(.*?)<\/h2>/gi, '## $1\n')
+                .replace(/<h3>(.*?)<\/h3>/gi, '### $1\n')
+                .replace(/<b>(.*?)<\/b>/gi, '**$1**')
+                .replace(/<strong>(.*?)<\/strong>/gi, '**$1**')
+                .replace(/<i>(.*?)<\/i>/gi, '*$1*')
+                .replace(/<em>(.*?)<\/em>/gi, '*$1*')
+                .replace(/<p>(.*?)<\/p>/gi, '$1\n\n')
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/&nbsp;/g, ' ');
+
+            // Strip other tags
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = md;
+            editor.value = tempDiv.textContent || tempDiv.innerText || "";
+            
+            updateStats();
+            sourceView.textContent = preview.innerHTML;
+            
+            setTimeout(() => { isSyncing = false; }, 10);
+        });
+        
+        function updatePreview() {
+            if (isSyncing) return;
+            const markdown = editor.value;
+            const html = marked.parse(markdown);
+            preview.innerHTML = html;
+            sourceView.textContent = html;
+        }
+        
+        function updateStats() {
+            const text = editor.value;
+            
+            // Paragraph count (separated by double newlines)
+            const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0).length;
+            document.getElementById('paragraphCount').textContent = paragraphs;
+            
+            // Sentence count
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+            document.getElementById('sentenceCount').textContent = sentences;
+            
+            // Word count
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            const wordCount = text.trim() === '' ? 0 : words.length;
+            document.getElementById('wordCount').textContent = wordCount;
+            
+            // Character counts
+            document.getElementById('charCountSpaces').textContent = text.length;
+            document.getElementById('charCountNoSpaces').textContent = text.replace(/\s/g, '').length;
+        }
+        
+        function checkSelection() {
+            const selectedText = editor.value.substring(editor.selectionStart, editor.selectionEnd).trim();
+            const selectionStats = document.getElementById('selectionStats');
+            
+            if (selectedText.length > 0) {
+                const text = editor.value;
+                const allWords = text.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+                const totalWords = allWords.length;
+                
+                const selectedLower = selectedText.toLowerCase();
+                
+                // Count occurrences
+                let count = 0;
+                let index = text.toLowerCase().indexOf(selectedLower);
+                while (index !== -1) {
+                    count++;
+                    index = text.toLowerCase().indexOf(selectedLower, index + 1);
+                }
+                
+                // Calculate percentage (words in selection vs total words)
+                const selectedWords = selectedText.split(/\s+/).filter(w => w.length > 0).length;
+                const percentage = totalWords > 0 ? ((selectedWords * count / totalWords) * 100).toFixed(1) : 0;
+                
+                selectionStats.innerHTML = `<strong>"${selectedText.substring(0, 20)}${selectedText.length > 20 ? '...' : ''}"</strong>: ${count} occurrence(s) | ${percentage}% of document`;
+            } else {
+                selectionStats.textContent = '';
+            }
+        }
+        
+        function insertFormat(before, after) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selectedText = text.substring(start, end);
+            
+            editor.value = text.substring(0, start) + before + selectedText + after + text.substring(end);
+            editor.focus();
+            editor.setSelectionRange(start + before.length, end + before.length);
+            updatePreview();
+            updateStats();
+        }
+        
+        function insertHeading(level) {
+            const hashes = '#'.repeat(level) + ' ';
+            const start = editor.selectionStart;
+            const text = editor.value;
+            
+            // Find start of current line
+            let lineStart = start;
+            while (lineStart > 0 && text[lineStart - 1] !== '\n') {
+                lineStart--;
+            }
+            
+            editor.value = text.substring(0, lineStart) + hashes + text.substring(lineStart);
+            editor.focus();
+            updatePreview();
+            updateStats();
+            hideDropdown('headingDropdown');
+        }
+        
+        function insertList(type) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            
+            // Find start of the first selected line
+            let rangeStart = start;
+            while (rangeStart > 0 && text[rangeStart - 1] !== '\n') {
+                rangeStart--;
+            }
+            
+            // Find end of the last selected line
+            let rangeEnd = end;
+            while (rangeEnd < text.length && text[rangeEnd] !== '\n') {
+                rangeEnd++;
+            }
+            
+            const selectedLines = text.substring(rangeStart, rangeEnd).split('\n');
+            const processedLines = selectedLines.map((line, index) => {
+                let prefix;
+                if (type === 'ordered') {
+                    prefix = `${index + 1}. `;
+                } else if (type === 'unordered') {
+                    prefix = '- ';
+                } else {
+                    prefix = '- [ ] ';
+                }
+                
+                // If line already starts with a list marker, maybe we should replace it? 
+                // For simplicity, we'll just prepend it if it's not empty
+                return line.trim() === '' && selectedLines.length > 1 ? line : prefix + line;
+            });
+            
+            const newText = processedLines.join('\n');
+            editor.value = text.substring(0, rangeStart) + newText + text.substring(rangeEnd);
+            
+            editor.focus();
+            editor.setSelectionRange(rangeStart, rangeStart + newText.length);
+            updatePreview();
+            updateStats();
+        }
+        
+        function insertQuote() {
+            const start = editor.selectionStart;
+            const text = editor.value;
+            
+            let lineStart = start;
+            while (lineStart > 0 && text[lineStart - 1] !== '\n') {
+                lineStart--;
+            }
+            
+            editor.value = text.substring(0, lineStart) + '> ' + text.substring(lineStart);
+            editor.focus();
+            updatePreview();
+            updateStats();
+        }
+        
+        function insertCodeBlock() {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selectedText = text.substring(start, end);
+            
+            const codeBlock = '\n```\n' + selectedText + '\n```\n';
+            editor.value = text.substring(0, start) + codeBlock + text.substring(end);
+            editor.focus();
+            updatePreview();
+            updateStats();
+        }
+        
+        function insertLink() {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selectedText = text.substring(start, end) || 'link text';
+            
+            const link = '[' + selectedText + '](url)';
+            editor.value = text.substring(0, start) + link + text.substring(end);
+            editor.focus();
+            updatePreview();
+            updateStats();
+        }
+        
+        function insertImage() {
+            const start = editor.selectionStart;
+            const text = editor.value;
+            
+            const image = '![alt text](image-url)';
+            editor.value = text.substring(0, start) + image + text.substring(start);
+            editor.focus();
+            updatePreview();
+            updateStats();
+        }
+        
+        function applyTextColor(color) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selectedText = text.substring(start, end) || 'text';
+            
+            const coloredText = `<span style="color:${color}">${selectedText}</span>`;
+            editor.value = text.substring(0, start) + coloredText + text.substring(end);
+            editor.focus();
+            document.getElementById('textColorIndicator').style.backgroundColor = color;
+            hideDropdown('textColorDropdown');
+            updatePreview();
+            updateStats();
+        }
+        
+        function applyHighlightColor(color) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selectedText = text.substring(start, end) || 'text';
+            
+            const highlightedText = `<mark style="background:${color}">${selectedText}</mark>`;
+            editor.value = text.substring(0, start) + highlightedText + text.substring(end);
+            editor.focus();
+            document.getElementById('highlightColorIndicator').style.backgroundColor = color;
+            hideDropdown('highlightColorDropdown');
+            updatePreview();
+            updateStats();
+        }
+        
+        function applyBgColor(color) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selectedText = text.substring(start, end) || 'text';
+            
+            const bgText = `<div style="background:${color};padding:8px;border-radius:4px">${selectedText}</div>`;
+            editor.value = text.substring(0, start) + bgText + text.substring(end);
+            editor.focus();
+            document.getElementById('bgColorIndicator').style.backgroundColor = color;
+            hideDropdown('bgColorDropdown');
+            updatePreview();
+            updateStats();
+        }
+        
+        function toggleSourceView() {
+            isSourceView = !isSourceView;
+            const btn = document.getElementById('sourceViewBtn');
+            
+            if (isSourceView) {
+                preview.classList.add('hidden');
+                sourceView.classList.remove('hidden');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Preview';
+            } else {
+                preview.classList.remove('hidden');
+                sourceView.classList.add('hidden');
+                btn.innerHTML = '<i class="fas fa-code"></i> View Code';
+            }
+        }
+        
+        function copyCode() {
+            const html = marked.parse(editor.value);
+            navigator.clipboard.writeText(html).then(() => {
+                alert('HTML copied to clipboard!');
+            });
+        }
+        
+        function exportPDF() {
+            // Get the preview HTML content
+            const element = document.getElementById('preview');
+            const filename = currentFileName.replace(/\.[^/.]+$/, "") + '.pdf';
+            
+            // PDF options
+            const opt = {
+                margin:       10,
+                filename:     filename,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Generate PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                console.log('PDF generated successfully');
+            }).catch(err => {
+                console.error('PDF generation failed:', err);
+                alert('PDF generation failed. Please try again.');
+            });
+        }
+        
+        function exportTxt() {
+            const text = editor.value;
+            const filename = currentFileName.replace(/\.[^/.]+$/, "") + '.txt';
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function exportHtml() {
+            const html = marked.parse(editor.value); // Get the parsed HTML
+            const filename = currentFileName.replace(/\.[^/.]+$/, "") + '.html';
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const icon = document.getElementById('themeIcon');
+            if (document.body.classList.contains('dark')) {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+        
+        function showCheatsheet() {
+            document.getElementById('cheatsheetModal').classList.remove('hidden');
+        }
+        
+        function hideCheatsheet() {
+            document.getElementById('cheatsheetModal').classList.add('hidden');
+        }
+        
+        // Dropdown handling
+        function hideDropdown(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+        
+        document.getElementById('headingBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('headingDropdown').classList.toggle('hidden');
+            hideDropdown('textColorDropdown');
+            hideDropdown('highlightColorDropdown');
+            hideDropdown('bgColorDropdown');
+        });
+        
+        document.getElementById('textColorBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('textColorDropdown').classList.toggle('hidden');
+            hideDropdown('headingDropdown');
+            hideDropdown('highlightColorDropdown');
+            hideDropdown('bgColorDropdown');
+        });
+        
+        document.getElementById('highlightColorBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('highlightColorDropdown').classList.toggle('hidden');
+            hideDropdown('headingDropdown');
+            hideDropdown('textColorDropdown');
+            hideDropdown('bgColorDropdown');
+        });
+        
+        document.getElementById('bgColorBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('bgColorDropdown').classList.toggle('hidden');
+            hideDropdown('headingDropdown');
+            hideDropdown('textColorDropdown');
+            hideDropdown('highlightColorDropdown');
+        });
+        
+        document.addEventListener('click', () => {
+            hideDropdown('headingDropdown');
+            hideDropdown('textColorDropdown');
+            hideDropdown('highlightColorDropdown');
+            hideDropdown('bgColorDropdown');
+        });
+        
+        // Keyboard shortcuts
+        editor.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'b') {
+                    e.preventDefault();
+                    insertFormat('**', '**');
+                } else if (e.key === 'i') {
+                    e.preventDefault();
+                    insertFormat('*', '*');
+                }
+            }
+        });
+        
+        // Close modal on outside click
+        document.getElementById('cheatsheetModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                hideCheatsheet();
+            }
+        });
+        
+        // File System Logic
+        let currentHandle = null;
+        let currentFileName = "Untitled.md";
+        let recentFiles = JSON.parse(localStorage.getItem('recentFiles') || '[]');
+
+        function updateRecentMenu() {
+            const container = document.getElementById('recentFilesMenu');
+            const items = container.querySelectorAll('.recent-item');
+            items.forEach(i => i.remove());
+
+            if (recentFiles.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'px-4 py-2 text-xs italic opacity-50 recent-item';
+                empty.textContent = 'No recent files';
+                container.appendChild(empty);
+                return;
+            }
+
+            recentFiles.forEach(file => {
+                const btn = document.createElement('button');
+                btn.className = 'dropdown-item w-full text-left px-4 py-2 text-xs truncate recent-item';
+                btn.textContent = file.name;
+                btn.onclick = () => loadRecent(file);
+                container.appendChild(btn);
+            });
+        }
+
+        function addToRecent(name, content) {
+            recentFiles = recentFiles.filter(f => f.name !== name);
+            recentFiles.unshift({ name, content, date: new Date().toISOString() });
+            recentFiles = recentFiles.slice(0, 5); // Keep last 5
+            localStorage.setItem('recentFiles', JSON.stringify(recentFiles));
+            updateRecentMenu();
+        }
+
+        function loadRecent(file) {
+            if (confirm('Discard unsaved changes and open "' + file.name + '"?')) {
+                editor.value = file.content;
+                currentFileName = file.name;
+                document.getElementById('currentFileName').textContent = currentFileName;
+                updatePreview();
+                updateStats();
+            }
+        }
+
+        function fileNew() {
+            if (confirm('Create new file? Unsaved changes will be lost.')) {
+                editor.value = '';
+                currentHandle = null;
+                currentFileName = "Untitled.md";
+                document.getElementById('currentFileName').textContent = currentFileName;
+                updatePreview();
+                updateStats();
+            }
+        }
+
+        async function fileOpen() {
+            try {
+                // Using modern File System Access API if available
+                if ('showOpenFilePicker' in window) {
+                    const [handle] = await window.showOpenFilePicker({
+                        types: [{ description: 'Markdown Files', accept: { 'text/markdown': ['.md', '.txt'] } }]
+                    });
+                    const file = await handle.getFile();
+                    const content = await file.text();
+                    currentHandle = handle;
+                    currentFileName = file.name;
+                    editor.value = content;
+                } else {
+                    // Fallback for older browsers
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.md,.txt';
+                    input.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        const content = await file.text();
+                        currentFileName = file.name;
+                        editor.value = content;
+                        document.getElementById('currentFileName').textContent = currentFileName;
+                        updatePreview();
+                    };
+                    input.click();
+                }
+                document.getElementById('currentFileName').textContent = currentFileName;
+                addToRecent(currentFileName, editor.value);
+                updatePreview();
+                updateStats();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function fileSave() {
+            if (currentHandle) {
+                try {
+                    const writable = await currentHandle.createWritable();
+                    await writable.write(editor.value);
+                    await writable.close();
+                    addToRecent(currentFileName, editor.value);
+                    alert('Saved successfully!');
+                } catch (err) {
+                    console.error(err);
+                    fileSaveAs();
+                }
+            } else {
+                fileSaveAs();
+            }
+        }
+
+        async function fileSaveAs() {
+            try {
+                if ('showSaveFilePicker' in window) {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: currentFileName,
+                        types: [{ description: 'Markdown File', accept: { 'text/markdown': ['.md'] } }]
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(editor.value);
+                    await writable.close();
+                    currentHandle = handle;
+                    currentFileName = (await handle.getFile()).name;
+                } else {
+                    // Fallback download
+                    const blob = new Blob([editor.value], { type: 'text/markdown' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = currentFileName;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+                document.getElementById('currentFileName').textContent = currentFileName;
+                addToRecent(currentFileName, editor.value);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Handle global shortcuts
+        window.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key.toLowerCase()) {
+                    case 's': e.preventDefault(); fileSave(); break;
+                    case 'o': e.preventDefault(); fileOpen(); break;
+                    case 'n': e.preventDefault(); fileNew(); break;
+                }
+            }
+        });
+
+        // Drag and drop functionality
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'copy';
+            document.body.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!e.relatedTarget || !document.body.contains(e.relatedTarget)) {
+                document.body.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.body.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length === 0) return;
+            
+            const file = files[0];
+            if (!file.name.match(/\.(md|txt|markdown)$/i)) {
+                alert('Please drop a Markdown (.md, .txt) file.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                editor.value = event.target.result;
+                currentFileName = file.name;
+                document.getElementById('currentFileName').textContent = currentFileName;
+                addToRecent(currentFileName, editor.value);
+                updatePreview();
+                updateStats();
+            };
+            reader.readAsText(file);
+        }
+
+        // Add drag-and-drop event listeners
+        document.addEventListener('dragover', handleDragOver);
+        document.addEventListener('dragleave', handleDragLeave);
+        document.addEventListener('drop', handleDrop);
+
+        // Add CSS for drag-over state
+        const style = document.createElement('style');
+        style.textContent = `
+            .drag-over {
+                outline: 3px dashed #3b82f6 !important;
+                outline-offset: -10px;
+                background-color: rgba(59, 130, 246, 0.05) !important;
+            }
+            .drag-over * {
+                pointer-events: none;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initial update
+        updateStats();
+        updateRecentMenu();
+
+        // Load file from URL parameter (called from Mark1.bat with ?b64=BASE64&name=FILE.md)
+        const urlParams = new URLSearchParams(window.location.search);
+        const b64Content = urlParams.get('b64');
+        const fileName = urlParams.get('name');
+        if (b64Content && fileName) {
+            try {
+                const content = atob(decodeURIComponent(b64Content));
+                editor.value = content;
+                currentFileName = fileName;
+                document.getElementById('currentFileName').textContent = currentFileName;
+                updatePreview();
+                updateStats();
+                addToRecent(currentFileName, content);
+            } catch (err) {
+                console.error('Failed to decode file content:', err);
+            }
+        }
+    </script>
+</body>
+</html>
