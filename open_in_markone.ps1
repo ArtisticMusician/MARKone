@@ -7,4 +7,5 @@ $name = [System.IO.Path]::GetFileName($mdPath)
 
 $url = "file:///C:/Users/Josh/Documents/0000000000-MyApps/MarkOne/MARKOne.html?b64=$enc&name=$name"
 
-Start-Process -FilePath "C:\Program Files\Google\Chrome\Application\chrome.exe" -ArgumentList "--profile-directory=`"Profile 13`"", "`"$url`""
+# Try launching without profile restriction
+Start-Process -FilePath "C:\Program Files\Google\Chrome\Application\chrome.exe" -ArgumentList "`"$url`""
