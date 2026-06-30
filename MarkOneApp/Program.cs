@@ -1,26 +1,75 @@
 using System;
 using System.IO;
-using System.Diagnostics;
+using System.Windows.Forms;
+using Microsoft.Web.WebView2.WinForms;
+using Microsoft.Web.WebView2.Core;
 
-class MarkOne
+class MarkOneApp
 {
+    [STAThread]
     static void Main(string[] args)
     {
-        if (args.Length == 0 || !File.Exists(args[0]))
+        string mdContent = "";
+        string mdName = "Untitled.md";
+
+        if (args.Length > 0 && File.Exists(args[0]))
         {
-            Console.Error.WriteLine("Usage: MarkOne.exe <file.md>");
-            return;
+            mdContent = File.ReadAllText(args[0]);
+            mdName = Path.GetFileName(args[0]);
         }
 
-        string mdPath = args[0];
-        string b64 = Convert.ToBase64String(File.ReadAllBytes(mdPath));
-        string enc = Uri.EscapeDataString(b64);
-        string name = Path.GetFileName(mdPath);
-        
-        string htmlDir = AppDomain.CurrentDomain.BaseDirectory;
-        string url = "file:///" + Path.Combine(htmlDir, "MARKOne.html").Replace('\\', '/')
-                   + "?b64=" + enc + "&name=" + name;
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
 
-        Process.Start("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", url);
+        var form = new Form
+        {
+            Text = "MARKone - " + mdName,
+            Width = 1400,
+            Height = 900,
+            WindowState = FormWindowState.Maximized
+        };
+
+        var webView = new WebView2 { Dock = DockStyle.Fill };
+        form.Controls.Add(webView);
+
+        string htmlDir = AppDomain.CurrentDomain.BaseDirectory;
+        string htmlPath = Path.Combine(htmlDir, "MARKOne.html");
+
+        var content = mdContent;
+        var name = mdName;
+
+        webView.CoreWebView2InitializationCompleted += (s, e) =>
+        {
+            // Hide DevTools menu
+            webView.CoreWebView2.Settings.AreDevToolsEnabled = false;
+            webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
+
+            // Inject the content once the page loads
+            var escaped = content
+                .Replace("\\", "\\\\")
+                .Replace("`", "\\`")
+                .Replace("${", "\\${");
+
+            var script = $@"
+(function() {{
+    var checkLoaded = setInterval(function() {{
+        var editor = document.getElementById('editor');
+        if (editor) {{
+            clearInterval(checkLoaded);
+            editor.value = `{escaped}`;
+            var fn = document.getElementById('currentFileName');
+            if (fn) fn.textContent = '{name.Replace("'", "\\'")}';
+            if (typeof updatePreview === 'function') updatePreview();
+            if (typeof updateStats === 'function') updateStats();
+        }}
+    }}, 50);
+    setTimeout(function() {{ clearInterval(checkLoaded); }}, 10000);
+}})();
+";
+            webView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(script);
+        };
+
+        webView.Source = new Uri("file:///" + htmlPath.Replace('\\', '/'));
+        Application.Run(form);
     }
 }
