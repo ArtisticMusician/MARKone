@@ -8,14 +8,6 @@
           "build/Microsoft.NET.ILLink.Tasks.props": {}
         }
       }
-    },
-    "net8.0/win-x64": {
-      "Microsoft.NET.ILLink.Tasks/8.0.28": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NET.ILLink.Tasks.props": {}
-        }
-      }
     }
   },
   "libraries": {
@@ -149,11 +141,6 @@
           }
         },
         "runtimeIdentifierGraphPath": "C:\\program files\\dotnet\\sdk\\8.0.422/PortableRuntimeIdentifierGraph.json"
-      }
-    },
-    "runtimes": {
-      "win-x64": {
-        "#import": []
       }
     }
   }
