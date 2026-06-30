@@ -1148,42 +1148,22 @@
         updateStats();
         updateRecentMenu();
 
-        // Load file from URL parameter (called from Mark1.bat with ?file=PATH)
+        // Load file from URL parameter (called from Mark1.bat with ?b64=BASE64&name=FILE.md)
         const urlParams = new URLSearchParams(window.location.search);
-        const filePath = urlParams.get('file');
-        if (filePath) {
-            fetch(filePath)
-                .then(res => {
-                    if (!res.ok) throw new Error('Failed to load file');
-                    return res.text();
-                })
-                .then(content => {
-                    editor.value = content;
-                    currentFileName = filePath.split('/').pop() || 'Untitled.md';
-                    document.getElementById('currentFileName').textContent = currentFileName;
-                    updatePreview();
-                    updateStats();
-                    addToRecent(currentFileName, content);
-                })
-                .catch(err => {
-                    console.error('Failed to load:', filePath, err);
-                    // Fallback: try drag-drop style FileReader via hidden input
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = '.md,.txt';
-                    input.onchange = async (e) => {
-                        const file = e.target.files[0];
-                        if (!file) return;
-                        const content = await file.text();
-                        editor.value = content;
-                        currentFileName = file.name;
-                        document.getElementById('currentFileName').textContent = currentFileName;
-                        updatePreview();
-                        updateStats();
-                        addToRecent(currentFileName, content);
-                    };
-                    input.click();
-                });
+        const b64Content = urlParams.get('b64');
+        const fileName = urlParams.get('name');
+        if (b64Content && fileName) {
+            try {
+                const content = atob(decodeURIComponent(b64Content));
+                editor.value = content;
+                currentFileName = fileName;
+                document.getElementById('currentFileName').textContent = currentFileName;
+                updatePreview();
+                updateStats();
+                addToRecent(currentFileName, content);
+            } catch (err) {
+                console.error('Failed to decode file content:', err);
+            }
         }
     </script>
 </body>
