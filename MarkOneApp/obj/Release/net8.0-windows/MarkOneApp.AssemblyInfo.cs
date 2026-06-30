@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MarkOneApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e9d51358ff4b5aec9131d7f8df89ade6645c0de1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8bfbf758128f38acc5880be41ae7a71a16635491")]
 [assembly: System.Reflection.AssemblyProductAttribute("MarkOneApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MarkOneApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

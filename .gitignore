@@ -1,0 +1,4 @@
+*.WebView2/
+MarkOneApp/bin/
+MarkOneApp/obj/
+MarkOneApp/publish/
