@@ -1,0 +1,7 @@
+
+> markone@1.0.0 start
+> electron .
+
+[290460:0806/220605.832600:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:257] Missing X server or $DISPLAY
+[290460:0806/220605.832665:ERROR:ui/aura/env.cc:246] The platform failed to initialize.  Exiting.
+/app/node_modules/electron/dist/electron exited with signal SIGTRAP
