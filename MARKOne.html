@@ -111,7 +111,17 @@
         .preview-pane code { background-color: var(--bg-tertiary); padding: 0.2em 0.4em; border-radius: 3px; font-family: monospace; }
         .preview-pane pre { background-color: var(--bg-tertiary); padding: 1em; border-radius: 5px; overflow-x: auto; }
         .preview-pane pre code { background-color: transparent; padding: 0; }
-        .preview-pane a { color: #525252; text-decoration: underline; }
+
+        /* Light Theme Links */
+        .preview-pane a { color: #0000FF; text-decoration: underline; }
+        .preview-pane a:visited { color: #800080; }
+        .preview-pane a:hover { text-decoration: none; }
+
+        /* Dark Theme Links */
+        .dark .preview-pane a { color: #00e1ff; text-decoration: underline; }
+        .dark .preview-pane a:visited { color: #00e1ff; }
+        .dark .preview-pane a:hover { text-decoration: none; }
+
         .preview-pane img { max-width: 100%; height: auto; }
         .preview-pane input[type="checkbox"] { margin-right: 0.5em; }
         .preview-pane del { text-decoration: line-through; }
@@ -134,6 +144,10 @@
         
         .source-code-view {
             background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .theme-aware-icon {
             color: var(--text-primary);
         }
     </style>
@@ -340,7 +354,15 @@
             
             <div class="flex-1"></div>
             
-            <div class="flex gap-2">
+            <div class="flex gap-2 items-center">
+                <button onclick="centerDivider()" id="centerDividerBtn" class="px-2 py-1 rounded text-xs hover:bg-gray-200 flex items-center justify-center theme-aware-icon" title="Center Divider">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12.5523 2 13 2.44772 13 3V21C13 21.5523 12.5523 22 12 22C11.4477 22 11 21.5523 11 21V3C11 2.44772 11.4477 2 12 2Z"/>
+                        <path d="M8 8L4 12L8 16V8Z"/>
+                        <path d="M16 8L20 12L16 16V8Z"/>
+                    </svg>
+                </button>
+                <div class="h-4 border-r border-gray-400 mx-1"></div>
                 <button onclick="toggleSourceView()" id="sourceViewBtn" class="px-2 py-1 rounded text-xs hover:bg-gray-200" title="View Source HTML">
                     <i class="fas fa-code"></i> View Code
                 </button>
@@ -366,22 +388,27 @@
         </div>
         
         <!-- Editor and Preview -->
-        <div class="flex-1 flex gap-4 min-h-0">
+        <div id="mainContainer" class="flex-1 flex gap-4 min-h-0" style="display: flex;">
             <!-- Editor -->
-            <div class="flex-1 flex flex-col border rounded-lg editor-container">
+            <div id="editorContainer" class="flex flex-col border rounded-lg editor-container" style="flex: 1; min-width: 100px;">
                 <div class="px-3 py-2 border-b font-medium text-sm" style="border-color: var(--border-color); color: var(--text-secondary);">
                     MARKone Markdown
                 </div>
                 <textarea id="editor" class="editor-textarea flex-1 p-4 resize-none outline-none font-mono text-sm overflow-y-auto" placeholder="Start writing your markdown here..."></textarea>
             </div>
             
+            <!-- Resizer -->
+            <div id="resizer" class="resizer" style="width: 8px; cursor: col-resize; margin: 0 -4px; z-index: 10; display: flex; align-items: center; justify-content: center; opacity: 0.5; transition: opacity 0.2s;">
+                <div style="width: 4px; height: 30px; background-color: var(--border-color); border-radius: 2px;"></div>
+            </div>
+
             <!-- Preview -->
-            <div class="flex-1 flex flex-col border rounded-lg editor-container">
+            <div id="previewContainer" class="flex flex-col border rounded-lg editor-container" style="flex: 1; min-width: 100px;">
                 <div class="px-3 py-2 border-b font-medium text-sm flex items-center justify-between" style="border-color: var(--border-color); color: var(--text-secondary);">
                     <span>MARKone Preview</span>
                     
                 </div>
-                <div id="preview" class="preview-pane flex-1 p-4 overflow-auto" spellcheck="false"></div>
+                <div id="preview" class="preview-pane flex-1 p-4 overflow-auto" spellcheck="false" contenteditable="true"></div>
                 <pre id="sourceView" class="source-code-view flex-1 p-4 overflow-auto text-sm font-mono hidden whitespace-pre-wrap"></pre>
             </div>
         </div>
@@ -1260,6 +1287,54 @@
                 console.error('Failed to decode file content:', err);
             }
         }
+
+        // Resizer Logic
+        function centerDivider() {
+            const editorContainer = document.getElementById('editorContainer');
+            const previewContainer = document.getElementById('previewContainer');
+            editorContainer.style.flex = `0 1 50%`;
+            previewContainer.style.flex = `0 1 50%`;
+        }
+
+        const resizer = document.getElementById('resizer');
+        const editorContainer = document.getElementById('editorContainer');
+        const previewContainer = document.getElementById('previewContainer');
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            resizer.style.opacity = '1';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isResizing) return;
+
+            const container = document.getElementById('mainContainer');
+            const containerRect = container.getBoundingClientRect();
+
+            let newEditorWidth = e.clientX - containerRect.left - 8;
+            let totalWidth = containerRect.width - 16;
+
+            if (newEditorWidth < 100) newEditorWidth = 100;
+            if (newEditorWidth > totalWidth - 100) newEditorWidth = totalWidth - 100;
+
+            const editorFlexBasis = (newEditorWidth / totalWidth) * 100;
+
+            editorContainer.style.flex = `0 1 ${editorFlexBasis}%`;
+            previewContainer.style.flex = `0 1 ${100 - editorFlexBasis}%`;
+        });
+
+        document.addEventListener('mouseup', function(e) {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                resizer.style.opacity = '';
+            }
+        });
+
+        resizer.addEventListener('mouseenter', () => { resizer.style.opacity = '1'; });
+        resizer.addEventListener('mouseleave', () => { if (!isResizing) resizer.style.opacity = '0.5'; });
     </script>
 </body>
 </html>
