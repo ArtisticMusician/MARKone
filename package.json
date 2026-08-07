@@ -1,7 +1,7 @@
 {
   "name": "markone",
-  "version": "1.0.0",
-  "description": "MARKone - Single File Portable Markdown Editor",
+  "version": "1.0.2",
+  "description": "MARKone - A Simple, Easy To UseMarkdown Editor",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
