@@ -1,6 +1,6 @@
 {
   "name": "markone",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MARKone - Single File Portable Markdown Editor",
   "main": "main.js",
   "scripts": {
@@ -29,6 +29,7 @@
   "build": {
     "appId": "com.markone.editor",
     "productName": "MARKone",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "dist"
     },
