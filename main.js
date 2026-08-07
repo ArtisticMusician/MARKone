@@ -125,10 +125,17 @@ ipcMain.handle('save-file', async (event, { filePath, content }) => {
 ipcMain.handle('set-as-default', async () => {
     if (process.platform === 'win32') {
         try {
-            app.setAsDefaultProtocolClient('markone');
-            // Setting file association requires electron-builder configuration for installed version.
-            // But we can inform the user that it's configured.
-            return { success: true, message: 'File association is configured during installation.' };
+            const { exec } = require('child_process');
+            const os = require('os');
+            const tempMd = path.join(os.tmpdir(), 'markone_associate.md');
+
+            // Create a temporary file to force the "Open With" dialog
+            fs.writeFileSync(tempMd, '# MarkOne\nAssociate .md files with MarkOne.');
+
+            // This forces the Windows "How do you want to open this file?" dialog
+            exec(`rundll32.exe shell32.dll,OpenAs_RunDLL ${tempMd}`);
+
+            return { success: true, message: 'Please select MARKone from the list and check "Always use this app to open .md files".' };
         } catch (e) {
             return { success: false, message: e.message };
         }
