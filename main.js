@@ -133,7 +133,7 @@ ipcMain.handle('set-as-default', async () => {
             fs.writeFileSync(tempMd, '# MarkOne\nAssociate .md files with MarkOne.');
 
             // This forces the Windows "How do you want to open this file?" dialog
-            exec(`rundll32.exe shell32.dll,OpenAs_RunDLL ${tempMd}`);
+            exec(`rundll32.exe shell32.dll,OpenAs_RunDLL "${tempMd}"`);
 
             return { success: true, message: 'Please select MARKone from the list and check "Always use this app to open .md files".' };
         } catch (e) {
