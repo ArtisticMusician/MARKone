@@ -33,14 +33,6 @@
     "directories": {
       "output": "dist"
     },
-    "fileAssociations": [
-      {
-        "ext": "md",
-        "name": "Markdown Document",
-        "description": "Markdown text document",
-        "role": "Editor"
-      }
-    ],
     "win": {
       "target": [
         "nsis"
@@ -49,11 +41,27 @@
     },
     "mac": {
       "target": "dmg",
-      "icon": "gitimages/MarkOne_icon.png"
+      "icon": "gitimages/MarkOne_icon.png",
+      "fileAssociations": [
+        {
+          "ext": "md",
+          "name": "Markdown Document",
+          "description": "Markdown text document",
+          "role": "Editor"
+        }
+      ]
     },
     "linux": {
       "target": "AppImage",
-      "icon": "gitimages/MarkOne_icon.png"
+      "icon": "gitimages/MarkOne_icon.png",
+      "fileAssociations": [
+        {
+          "ext": "md",
+          "name": "Markdown Document",
+          "description": "Markdown text document",
+          "role": "Editor"
+        }
+      ]
     },
     "nsis": {
       "oneClick": false,

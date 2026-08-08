@@ -1,15 +1,40 @@
+!include nsDialogs.nsh
+
+Var Checkbox
+
 !macro customHeader
-  !system "echo '' > ${BUILD_DIR}/customHeader"
+  Page custom fileAssociationPage fileAssociationPageLeave
 !macroend
 
-!macro preInit
-  ; Nothing needed for preInit
-!macroend
+Function fileAssociationPage
+  !insertmacro MUI_HEADER_TEXT "File Associations" "Choose file associations for MARKone."
+  nsDialogs::Create 1018
+  Pop $0
 
-!macro customInit
-  ; Provide option to set file association
-!macroend
+  ${If} $0 == error
+    Abort
+  ${EndIf}
 
-!macro customInstall
-  ; Standard Electron-builder handles the actual association if requested
+  ${NSD_CreateCheckbox} 0 0 100% 12u "Associate .md files with MARKone"
+  Pop $Checkbox
+
+  ; Default to checked
+  ${NSD_SetState} $Checkbox ${BST_CHECKED}
+
+  nsDialogs::Show
+FunctionEnd
+
+Function fileAssociationPageLeave
+  ${NSD_GetState} $Checkbox $0
+  ${If} $0 == ${BST_CHECKED}
+    WriteRegStr SHCTX "Software\Classes\.md" "" "markone.md"
+    WriteRegStr SHCTX "Software\Classes\markone.md" "" "Markdown Document"
+    WriteRegStr SHCTX "Software\Classes\markone.md\DefaultIcon" "" "$INSTDIR\MARKone.exe,0"
+    WriteRegStr SHCTX "Software\Classes\markone.md\shell\open\command" "" '"$INSTDIR\MARKone.exe" "%1"'
+  ${EndIf}
+FunctionEnd
+
+!macro customUnInstall
+  DeleteRegKey SHCTX "Software\Classes\.md"
+  DeleteRegKey SHCTX "Software\Classes\markone.md"
 !macroend
