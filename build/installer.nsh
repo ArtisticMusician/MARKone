@@ -2,12 +2,7 @@
 
 Var Checkbox
 
-!macro customHeader
-  Page custom fileAssociationPage fileAssociationPageLeave
-!macroend
-
 Function fileAssociationPage
-  !insertmacro MUI_HEADER_TEXT "File Associations" "Choose file associations for MARKone."
   nsDialogs::Create 1018
   Pop $0
 
@@ -34,7 +29,10 @@ Function fileAssociationPageLeave
   ${EndIf}
 FunctionEnd
 
+!macro customHeader
+  Page custom fileAssociationPage fileAssociationPageLeave
+!macroend
+
 !macro customUnInstall
-  DeleteRegKey SHCTX "Software\Classes\.md"
   DeleteRegKey SHCTX "Software\Classes\markone.md"
 !macroend
