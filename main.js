@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, session } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, session, Menu, MenuItem } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -30,6 +30,39 @@ function createWindow() {
     mainWindow.setMenu(null);
     mainWindow.maximize();
     mainWindow.loadFile('MARKOne.html');
+
+    mainWindow.webContents.on('context-menu', (event, params) => {
+        const menu = new Menu();
+
+        // Add spelling suggestions
+        if (params.dictionarySuggestions && params.dictionarySuggestions.length > 0) {
+            for (const suggestion of params.dictionarySuggestions) {
+                menu.append(new MenuItem({
+                    label: suggestion,
+                    click: () => mainWindow.webContents.replaceMisspelling(suggestion)
+                }));
+            }
+            menu.append(new MenuItem({ type: 'separator' }));
+        }
+
+        // Allow users to add the misspelled word to the dictionary
+        if (params.misspelledWord) {
+            menu.append(new MenuItem({
+                label: 'Add to dictionary',
+                click: () => mainWindow.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord)
+            }));
+            menu.append(new MenuItem({ type: 'separator' }));
+        }
+
+        // Standard context menu items
+        menu.append(new MenuItem({ label: 'Cut', role: 'cut', enabled: params.editFlags.canCut }));
+        menu.append(new MenuItem({ label: 'Copy', role: 'copy', enabled: params.editFlags.canCopy }));
+        menu.append(new MenuItem({ label: 'Paste', role: 'paste', enabled: params.editFlags.canPaste }));
+        menu.append(new MenuItem({ type: 'separator' }));
+        menu.append(new MenuItem({ label: 'Select All', role: 'selectAll', enabled: params.editFlags.canSelectAll }));
+
+        menu.popup();
+    });
 
     mainWindow.webContents.on('did-finish-load', () => {
         // Handle Windows/Linux command-line arguments for file opening
