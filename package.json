@@ -1,6 +1,6 @@
 {
   "name": "markone",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "MARKone - A Simple, Easy To Use Markdown Editor",
   "main": "main.js",
   "scripts": {
