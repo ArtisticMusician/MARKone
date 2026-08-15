@@ -3,3 +3,4 @@ MarkOneApp/bin/
 MarkOneApp/obj/
 MarkOneApp/publish/
 node_modules/
+dist/
