@@ -1103,6 +1103,22 @@
             }
         }
 
+        function showToast(message) {
+            let toast = document.getElementById('save-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'save-toast';
+                toast.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg transition-opacity duration-300 z-50 opacity-0';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.classList.remove('opacity-0');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+
         // Electron state
         let electronFilePath = null;
 
@@ -1115,6 +1131,7 @@
                     });
                     if (result.success) {
                         addToRecent(currentFileName, editor.value);
+                        showToast('File saved successfully!');
                     } else {
                         alert('Failed to save file: ' + result.error);
                     }
@@ -1127,7 +1144,7 @@
                     await writable.write(editor.value);
                     await writable.close();
                     addToRecent(currentFileName, editor.value);
-                    alert('Saved successfully!');
+                    showToast('File saved successfully!');
                 } catch (err) {
                     console.error(err);
                     fileSaveAs();
@@ -1148,6 +1165,7 @@
                     currentFileName = result.fileName;
                     document.getElementById('currentFileName').textContent = currentFileName;
                     addToRecent(currentFileName, editor.value);
+                    showToast('File saved successfully!');
                 }
             } else {
                 try {
@@ -1173,6 +1191,7 @@
                     }
                     document.getElementById('currentFileName').textContent = currentFileName;
                     addToRecent(currentFileName, editor.value);
+                    showToast('File saved successfully!');
                 } catch (err) {
                     console.error(err);
                 }
