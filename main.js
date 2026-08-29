@@ -5,20 +5,68 @@ const fs = require('fs');
 let mainWindow = null;
 let fileToOpen = null;
 
-// Handle macOS open-file event
-app.on('open-file', (event, filePath) => {
-    event.preventDefault();
-    if (mainWindow) {
-        openAndSendFile(filePath);
-    } else {
-        fileToOpen = filePath;
-    }
-});
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+    app.quit();
+} else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
+
+            // Find the file path from the new command line arguments
+            for (let i = 1; i < commandLine.length; i++) {
+                if (commandLine[i].endsWith('.md') && fs.existsSync(commandLine[i])) {
+                    openAndSendFile(commandLine[i]);
+                    break;
+                }
+            }
+        }
+    });
+
+    // Handle macOS open-file event
+    app.on('open-file', (event, filePath) => {
+        event.preventDefault();
+        if (mainWindow) {
+            openAndSendFile(filePath);
+        } else {
+            fileToOpen = filePath;
+        }
+    });
+
+    app.whenReady().then(() => {
+        // Disable all background networking by blocking http/https requests
+        session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
+            if (details.url.startsWith('http://') || details.url.startsWith('https://')) {
+                callback({ cancel: true });
+            } else {
+                callback({ cancel: false });
+            }
+        });
+
+        createWindow();
+
+        app.on('activate', () => {
+            if (BrowserWindow.getAllWindows().length === 0) {
+                createWindow();
+            }
+        });
+    });
+
+    app.on('window-all-closed', () => {
+        if (process.platform !== 'darwin') {
+            app.quit();
+        }
+    });
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 900,
+        show: false, // Wait until ready-to-show to prevent blank flash
         icon: path.join(__dirname, 'gitimages', 'MarkOne_icon.png'),
         webPreferences: {
             nodeIntegration: false,
@@ -30,6 +78,10 @@ function createWindow() {
     mainWindow.setMenu(null);
     mainWindow.maximize();
     mainWindow.loadFile('MARKOne.html');
+
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+    });
 
     mainWindow.webContents.on('context-menu', (event, params) => {
         const menu = new Menu();
@@ -101,31 +153,6 @@ function openAndSendFile(filePath) {
         console.error('Failed to open file:', err);
     }
 }
-
-app.whenReady().then(() => {
-    // Disable all background networking by blocking http/https requests
-    session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
-        if (details.url.startsWith('http://') || details.url.startsWith('https://')) {
-            callback({ cancel: true });
-        } else {
-            callback({ cancel: false });
-        }
-    });
-
-    createWindow();
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
-});
-
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
 
 // IPC handlers for saving files
 ipcMain.handle('save-file-dialog', async (event, { content, defaultPath }) => {
