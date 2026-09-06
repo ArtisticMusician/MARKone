@@ -112,6 +112,12 @@
         .preview-pane pre { background-color: var(--bg-tertiary); padding: 1em; border-radius: 5px; overflow-x: auto; }
         .preview-pane pre code { background-color: transparent; padding: 0; }
 
+        /* Tables */
+        .preview-pane table { width: 100%; border-collapse: collapse; margin: 1em 0; border: 1px solid var(--border-color); }
+        .preview-pane th, .preview-pane td { padding: 0.75em 1em; border: 1px solid var(--border-color); }
+        .preview-pane th { background-color: var(--bg-tertiary); font-weight: bold; text-align: left; }
+        .preview-pane tr:nth-child(even) { background-color: var(--bg-secondary); }
+
         /* Light Theme Links */
         .preview-pane a { color: #0000FF; text-decoration: underline; }
         .preview-pane a:visited { color: #800080; }
@@ -197,12 +203,6 @@
                     <button onclick="exportHtml()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
                         <i class="fas fa-file-code"></i> Export HTML
                     </button>
-                    <div class="border-t mt-1" style="border-color: var(--border-color)"></div>
-                    <div class="px-4 py-2 text-[10px] uppercase font-bold opacity-50">Credits & License</div>
-                    <div class="px-4 py-2 text-xs text-gray-600 dark:text-gray-400">
-                        Copyright © Josh McCann.<br>
-                        Permission is hereby granted to use this software for free for open source and non-commercial purposes. Commercial usage is strictly prohibited without prior permission. Please contact the developer via GitHub for licensing inquiries.
-                    </div>
                 </div>
             </div>
 
@@ -427,18 +427,26 @@
     <div id="settingsModal" class="modal-bg fixed inset-0 z-50 flex items-center justify-center hidden">
         <div class="modal-content border rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden flex flex-col">
             <div class="flex items-center justify-between px-6 py-4 border-b" style="border-color: var(--border-color);">
-                <h2 class="text-xl font-bold">Settings</h2>
+                <h2 class="text-xl font-bold">Settings <span id="appVersion" class="text-xs font-normal text-gray-500 ml-2"></span></h2>
                 <button onclick="hideSettings()" class="p-2 rounded hover:bg-gray-200">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="p-6 overflow-auto flex-1">
-                <div class="mb-4">
+                <div class="mb-6">
                     <h3 class="font-bold mb-2">Default App</h3>
                     <p class="text-sm mb-3" style="color: var(--text-secondary);">Set MARKone as the default editor for .md files.</p>
                     <button onclick="setAsDefaultApp()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm w-full font-medium transition-colors">
                         Set as Default Markdown App
                     </button>
+                </div>
+
+                <div class="mb-4 pt-4 border-t" style="border-color: var(--border-color)">
+                    <h3 class="font-bold mb-2">Credits & License</h3>
+                    <div class="text-xs text-gray-600 dark:text-gray-400">
+                        Copyright © Josh McCann.<br><br>
+                        Permission is hereby granted to use this software for free for open source and non-commercial purposes. Commercial usage is strictly prohibited without prior permission. Please contact the developer via GitHub for licensing inquiries.
+                    </div>
                 </div>
             </div>
         </div>
@@ -923,7 +931,11 @@
             document.getElementById('cheatsheetModal').classList.add('hidden');
         }
 
-        function showSettings() {
+        async function showSettings() {
+            if (window.electronAPI) {
+                const version = await window.electronAPI.getVersion();
+                document.getElementById('appVersion').textContent = 'v' + version;
+            }
             document.getElementById('settingsModal').classList.remove('hidden');
         }
 
@@ -1030,40 +1042,82 @@
 
             recentFiles.forEach(file => {
                 const btn = document.createElement('button');
-                btn.className = 'dropdown-item w-full text-left px-4 py-2 text-xs truncate recent-item';
-                btn.textContent = file.name;
+                btn.className = 'dropdown-item w-full text-left px-4 py-2 text-xs recent-item flex flex-col';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'truncate w-full font-medium';
+                nameSpan.textContent = file.name;
+                btn.appendChild(nameSpan);
+
+                if (file.path) {
+                    const pathSpan = document.createElement('span');
+                    pathSpan.className = 'truncate w-full text-[10px] opacity-60';
+                    pathSpan.textContent = file.path;
+                    btn.appendChild(pathSpan);
+                }
+
                 btn.onclick = () => loadRecent(file);
                 container.appendChild(btn);
             });
         }
 
-        function addToRecent(name, content) {
-            recentFiles = recentFiles.filter(f => f.name !== name);
-            recentFiles.unshift({ name, content, date: new Date().toISOString() });
-            recentFiles = recentFiles.slice(0, 5); // Keep last 5
+        function addToRecent(name, content, path = null) {
+            // Include path when comparing if available, otherwise just name
+            recentFiles = recentFiles.filter(f => {
+                if (path && f.path) return f.path !== path;
+                return f.name !== name;
+            });
+            recentFiles.unshift({ name, content, path, date: new Date().toISOString() });
+            recentFiles = recentFiles.slice(0, 10); // Keep last 10
             localStorage.setItem('recentFiles', JSON.stringify(recentFiles));
             updateRecentMenu();
         }
 
         function loadRecent(file) {
-            if (confirm('Discard unsaved changes and open "' + file.name + '"?')) {
-                editor.value = file.content;
-                currentFileName = file.name;
-                document.getElementById('currentFileName').textContent = currentFileName;
-                updatePreview();
-                updateStats();
+            if (window.electronAPI && window.electronAPI.openNewWindow) {
+                // Determine if current editor is pristine (empty or unchanged Untitled)
+                const isPristine = (editor.value.trim() === '' && currentFileName === 'Untitled.md' && (!electronFilePath));
+                if (isPristine) {
+                    editor.value = file.content;
+                    currentFileName = file.name;
+                    if (file.path && typeof electronFilePath !== 'undefined') electronFilePath = file.path;
+                    document.getElementById('currentFileName').textContent = currentFileName;
+                    updatePreview();
+                    updateStats();
+                } else {
+                    if (confirm('Discard unsaved changes and open "' + file.name + '"?')) {
+                        editor.value = file.content;
+                        currentFileName = file.name;
+                        if (file.path && typeof electronFilePath !== 'undefined') electronFilePath = file.path;
+                        document.getElementById('currentFileName').textContent = currentFileName;
+                        updatePreview();
+                        updateStats();
+                    }
+                }
+            } else {
+                if (confirm('Discard unsaved changes and open "' + file.name + '"?')) {
+                    editor.value = file.content;
+                    currentFileName = file.name;
+                    document.getElementById('currentFileName').textContent = currentFileName;
+                    updatePreview();
+                    updateStats();
+                }
             }
         }
 
         function fileNew() {
-            if (confirm('Create new file? Unsaved changes will be lost.')) {
-                editor.value = '';
-                currentHandle = null;
-                if (typeof electronFilePath !== 'undefined') electronFilePath = null;
-                currentFileName = "Untitled.md";
-                document.getElementById('currentFileName').textContent = currentFileName;
-                updatePreview();
-                updateStats();
+            if (window.electronAPI && window.electronAPI.openNewWindow) {
+                window.electronAPI.openNewWindow();
+            } else {
+                if (confirm('Create new file? Unsaved changes will be lost.')) {
+                    editor.value = '';
+                    currentHandle = null;
+                    if (typeof electronFilePath !== 'undefined') electronFilePath = null;
+                    currentFileName = "Untitled.md";
+                    document.getElementById('currentFileName').textContent = currentFileName;
+                    updatePreview();
+                    updateStats();
+                }
             }
         }
 
@@ -1091,11 +1145,14 @@
                         editor.value = content;
                         document.getElementById('currentFileName').textContent = currentFileName;
                         updatePreview();
+                        // Cannot reliably get absolute path from input type=file, passing null
+                        addToRecent(currentFileName, editor.value, null);
                     };
                     input.click();
+                    return; // Return early because onchange is async
                 }
                 document.getElementById('currentFileName').textContent = currentFileName;
-                addToRecent(currentFileName, editor.value);
+                addToRecent(currentFileName, editor.value, null); // Browser API doesn't give absolute paths
                 updatePreview();
                 updateStats();
             } catch (err) {
@@ -1130,7 +1187,7 @@
                         content: editor.value
                     });
                     if (result.success) {
-                        addToRecent(currentFileName, editor.value);
+                        addToRecent(currentFileName, editor.value, electronFilePath);
                         showToast('File saved successfully!');
                     } else {
                         alert('Failed to save file: ' + result.error);
@@ -1143,7 +1200,7 @@
                     const writable = await currentHandle.createWritable();
                     await writable.write(editor.value);
                     await writable.close();
-                    addToRecent(currentFileName, editor.value);
+                    addToRecent(currentFileName, editor.value, null);
                     showToast('File saved successfully!');
                 } catch (err) {
                     console.error(err);
@@ -1164,7 +1221,7 @@
                     electronFilePath = result.filePath;
                     currentFileName = result.fileName;
                     document.getElementById('currentFileName').textContent = currentFileName;
-                    addToRecent(currentFileName, editor.value);
+                    addToRecent(currentFileName, editor.value, electronFilePath);
                     showToast('File saved successfully!');
                 }
             } else {
@@ -1190,7 +1247,7 @@
                         URL.revokeObjectURL(url);
                     }
                     document.getElementById('currentFileName').textContent = currentFileName;
-                    addToRecent(currentFileName, editor.value);
+                    addToRecent(currentFileName, editor.value, null);
                     showToast('File saved successfully!');
                 } catch (err) {
                     console.error(err);
@@ -1243,8 +1300,11 @@
             reader.onload = function(event) {
                 editor.value = event.target.result;
                 currentFileName = file.name;
+                if (file.path && typeof electronFilePath !== 'undefined') {
+                    electronFilePath = file.path;
+                }
                 document.getElementById('currentFileName').textContent = currentFileName;
-                addToRecent(currentFileName, editor.value);
+                addToRecent(currentFileName, editor.value, file.path || null);
                 updatePreview();
                 updateStats();
             };
@@ -1279,7 +1339,7 @@
                 document.getElementById('currentFileName').textContent = currentFileName;
                 updatePreview();
                 updateStats();
-                addToRecent(currentFileName, data.content);
+                addToRecent(currentFileName, data.content, data.filePath);
             });
         }
 
