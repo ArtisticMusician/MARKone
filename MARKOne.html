@@ -352,6 +352,12 @@
                 <i class="fas fa-redo"></i>
             </button>
             
+            <div class="separator"></div>
+
+            <button onclick="toggleFindReplace()" class="px-3 py-1.5 rounded text-xl" title="Find & Replace (Ctrl+F)">
+                <i class="fas fa-search"></i>
+            </button>
+
             <div class="flex-1"></div>
             
             <div class="flex gap-2 items-center">
@@ -385,6 +391,24 @@
 
         </div>
         
+        <!-- Find and Replace Bar -->
+        <div id="findReplaceBar" class="toolbar border rounded-lg p-2 flex flex-wrap items-center gap-2 hidden bg-secondary">
+            <div class="flex items-center gap-2">
+                <input type="text" id="findInput" placeholder="Find..." class="px-2 py-1.5 rounded border text-sm editor-textarea outline-none w-48">
+                <button onclick="findNext()" class="px-3 py-1.5 rounded text-sm border hover:bg-gray-200" style="border-color: var(--border-color)">Find Next</button>
+            </div>
+            <div class="separator"></div>
+            <div class="flex items-center gap-2">
+                <input type="text" id="replaceInput" placeholder="Replace with..." class="px-2 py-1.5 rounded border text-sm editor-textarea outline-none w-48">
+                <button onclick="replaceText()" class="px-3 py-1.5 rounded text-sm border hover:bg-gray-200" style="border-color: var(--border-color)">Replace</button>
+                <button onclick="replaceAllText()" class="px-3 py-1.5 rounded text-sm border hover:bg-gray-200" style="border-color: var(--border-color)">Replace All</button>
+            </div>
+            <div class="flex-1"></div>
+            <button onclick="toggleFindReplace()" class="px-2 py-1.5 rounded hover:bg-gray-200" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
         <!-- Editor and Preview -->
         <div id="mainContainer" class="flex-1 flex gap-4 min-h-0" style="display: flex;">
             <!-- Editor -->
@@ -1255,6 +1279,107 @@
             }
         }
 
+        // Find and Replace Logic
+        function toggleFindReplace() {
+            const bar = document.getElementById('findReplaceBar');
+            bar.classList.toggle('hidden');
+            if (!bar.classList.contains('hidden')) {
+                const findInput = document.getElementById('findInput');
+                // Pre-fill with current selection if any
+                const selected = editor.value.substring(editor.selectionStart, editor.selectionEnd);
+                if (selected) {
+                    findInput.value = selected;
+                }
+                findInput.focus();
+            } else {
+                editor.focus();
+            }
+        }
+
+        function findNext() {
+            const searchText = document.getElementById('findInput').value;
+            if (!searchText) return;
+
+            const text = editor.value;
+            let startIndex = editor.selectionEnd;
+            let matchIndex = text.toLowerCase().indexOf(searchText.toLowerCase(), startIndex);
+
+            if (matchIndex === -1) {
+                // Wrap around
+                matchIndex = text.toLowerCase().indexOf(searchText.toLowerCase(), 0);
+            }
+
+            if (matchIndex !== -1) {
+                editor.focus();
+                editor.setSelectionRange(matchIndex, matchIndex + searchText.length);
+
+                // Scroll to selection
+                const lineHeight = parseFloat(getComputedStyle(editor).lineHeight);
+                const lines = text.substring(0, matchIndex).split('\n').length;
+                editor.scrollTop = (lines - 1) * lineHeight - (editor.clientHeight / 2);
+            }
+        }
+
+        function replaceText() {
+            const searchText = document.getElementById('findInput').value;
+            const replaceStr = document.getElementById('replaceInput').value;
+            if (!searchText) return;
+
+            const selectedText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
+            if (selectedText.toLowerCase() === searchText.toLowerCase()) {
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                const text = editor.value;
+
+                editor.value = text.substring(0, start) + replaceStr + text.substring(end);
+                editor.focus();
+                editor.setSelectionRange(start, start + replaceStr.length);
+
+                updatePreview();
+                updateStats();
+
+                // Find next after replacing
+                findNext();
+            } else {
+                findNext(); // Find it first if not selected
+            }
+        }
+
+        function replaceAllText() {
+            const searchText = document.getElementById('findInput').value;
+            const replaceStr = document.getElementById('replaceInput').value;
+            if (!searchText) return;
+
+            const text = editor.value;
+            const regex = new RegExp(escapeRegExp(searchText), 'gi');
+
+            if (regex.test(text)) {
+                editor.value = text.replace(regex, replaceStr);
+                updatePreview();
+                updateStats();
+                showToast('Replaced all occurrences.');
+            } else {
+                showToast('No occurrences found.');
+            }
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+        }
+
+        // Allow Enter key to trigger Find Next
+        document.getElementById('findInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                findNext();
+            }
+        });
+
+        document.getElementById('replaceInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                replaceText();
+            }
+        });
+
         // Handle global shortcuts
         window.addEventListener('keydown', (e) => {
             if (e.ctrlKey || e.metaKey) {
@@ -1262,6 +1387,14 @@
                     case 's': e.preventDefault(); fileSave(); break;
                     case 'o': e.preventDefault(); fileOpen(); break;
                     case 'n': e.preventDefault(); fileNew(); break;
+                    case 'f': e.preventDefault(); toggleFindReplace(); break;
+                    case 'h': e.preventDefault(); toggleFindReplace(); document.getElementById('replaceInput').focus(); break;
+                }
+            }
+            if (e.key === 'Escape') {
+                const bar = document.getElementById('findReplaceBar');
+                if (!bar.classList.contains('hidden')) {
+                    toggleFindReplace();
                 }
             }
         });
