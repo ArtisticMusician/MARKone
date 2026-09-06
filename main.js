@@ -182,6 +182,15 @@ ipcMain.handle('save-file', async (event, { filePath, content }) => {
     }
 });
 
+ipcMain.handle('new-window', () => {
+    createWindow();
+    return { success: true };
+});
+
+ipcMain.handle('get-version', () => {
+    return app.getVersion();
+});
+
 ipcMain.handle('set-as-default', async () => {
     if (process.platform === 'win32') {
         try {

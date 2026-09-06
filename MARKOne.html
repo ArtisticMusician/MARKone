@@ -112,6 +112,12 @@
         .preview-pane pre { background-color: var(--bg-tertiary); padding: 1em; border-radius: 5px; overflow-x: auto; }
         .preview-pane pre code { background-color: transparent; padding: 0; }
 
+        /* Tables */
+        .preview-pane table { width: 100%; border-collapse: collapse; margin: 1em 0; border: 1px solid var(--border-color); }
+        .preview-pane th, .preview-pane td { padding: 0.75em 1em; border: 1px solid var(--border-color); }
+        .preview-pane th { background-color: var(--bg-tertiary); font-weight: bold; text-align: left; }
+        .preview-pane tr:nth-child(even) { background-color: var(--bg-secondary); }
+
         /* Light Theme Links */
         .preview-pane a { color: #0000FF; text-decoration: underline; }
         .preview-pane a:visited { color: #800080; }
@@ -197,12 +203,6 @@
                     <button onclick="exportHtml()" class="dropdown-item w-full text-left px-4 py-2 flex items-center gap-2">
                         <i class="fas fa-file-code"></i> Export HTML
                     </button>
-                    <div class="border-t mt-1" style="border-color: var(--border-color)"></div>
-                    <div class="px-4 py-2 text-[10px] uppercase font-bold opacity-50">Credits & License</div>
-                    <div class="px-4 py-2 text-xs text-gray-600 dark:text-gray-400">
-                        Copyright © Josh McCann.<br>
-                        Permission is hereby granted to use this software for free for open source and non-commercial purposes. Commercial usage is strictly prohibited without prior permission. Please contact the developer via GitHub for licensing inquiries.
-                    </div>
                 </div>
             </div>
 
@@ -352,6 +352,12 @@
                 <i class="fas fa-redo"></i>
             </button>
             
+            <div class="separator"></div>
+
+            <button onclick="toggleFindReplace()" class="px-3 py-1.5 rounded text-xl" title="Find & Replace (Ctrl+F)">
+                <i class="fas fa-search"></i>
+            </button>
+
             <div class="flex-1"></div>
             
             <div class="flex gap-2 items-center">
@@ -388,10 +394,58 @@
         <!-- Editor and Preview -->
         <div id="mainContainer" class="flex-1 flex gap-4 min-h-0" style="display: flex;">
             <!-- Editor -->
-            <div id="editorContainer" class="flex flex-col border rounded-lg editor-container" style="flex: 0 1 50%; min-width: 100px;">
+            <div id="editorContainer" class="flex flex-col border rounded-lg editor-container relative" style="flex: 0 1 50%; min-width: 100px;">
                 <div class="px-3 py-2 border-b font-medium text-sm" style="border-color: var(--border-color); color: var(--text-secondary);">
                     MARKone Markdown
                 </div>
+
+                <!-- Advanced Find & Replace Floating Modal -->
+                <div id="findReplaceModal" class="absolute top-10 right-4 w-80 shadow-2xl rounded-lg border z-20 flex flex-col hidden bg-primary" style="border-color: var(--border-color); background-color: var(--bg-primary);">
+                    <div class="flex items-center justify-between px-3 py-2 border-b bg-secondary rounded-t-lg cursor-move" id="findReplaceDragHandle" style="border-color: var(--border-color);">
+                        <span class="text-xs font-bold uppercase opacity-70">Find & Replace</span>
+                        <button onclick="toggleFindReplace()" class="p-1 rounded hover:bg-gray-300 text-xs">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="p-3 flex flex-col gap-2">
+                        <!-- Find Row -->
+                        <div class="flex items-center gap-1 border rounded px-2 bg-primary focus-within:ring-1 focus-within:ring-blue-500" style="border-color: var(--border-color);">
+                            <input type="text" id="findInput" placeholder="Find..." class="py-1.5 flex-1 bg-transparent text-sm outline-none w-full text-primary" style="color: var(--text-primary);">
+                            <span id="findMatchCount" class="text-xs opacity-50 px-1 font-mono">No results</span>
+                            <button onclick="findPrev()" class="p-1 rounded hover:bg-gray-200 text-xs opacity-70 hover:opacity-100" title="Previous Match (Shift+Enter)">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <button onclick="findNextBtn()" class="p-1 rounded hover:bg-gray-200 text-xs opacity-70 hover:opacity-100" title="Next Match (Enter)">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                        </div>
+
+                        <!-- Options Row -->
+                        <div class="flex items-center gap-3 px-1 text-xs opacity-80 mt-1 mb-1">
+                            <label class="flex items-center gap-1 cursor-pointer" title="Match Case">
+                                <input type="checkbox" id="findMatchCase" class="cursor-pointer"> Aa
+                            </label>
+                            <label class="flex items-center gap-1 cursor-pointer" title="Match Whole Word">
+                                <input type="checkbox" id="findWholeWord" class="cursor-pointer"> \b\b
+                            </label>
+                            <label class="flex items-center gap-1 cursor-pointer" title="Use Regular Expression">
+                                <input type="checkbox" id="findRegex" class="cursor-pointer"> .*
+                            </label>
+                        </div>
+
+                        <!-- Replace Row -->
+                        <div class="flex items-center gap-1 border rounded px-2 bg-primary focus-within:ring-1 focus-within:ring-blue-500" style="border-color: var(--border-color);">
+                            <input type="text" id="replaceInput" placeholder="Replace..." class="py-1.5 flex-1 bg-transparent text-sm outline-none w-full text-primary" style="color: var(--text-primary);">
+                        </div>
+
+                        <!-- Actions Row -->
+                        <div class="flex justify-end gap-2 mt-1">
+                            <button onclick="replaceTextAdvanced()" class="px-3 py-1 rounded text-xs font-medium border hover:bg-gray-200 bg-secondary" style="border-color: var(--border-color);">Replace</button>
+                            <button onclick="replaceAllTextAdvanced()" class="px-3 py-1 rounded text-xs font-medium border hover:bg-gray-200 bg-secondary" style="border-color: var(--border-color);">Replace All</button>
+                        </div>
+                    </div>
+                </div>
+
                 <textarea id="editor" class="editor-textarea flex-1 p-4 resize-none outline-none font-mono text-sm overflow-y-auto" placeholder="Start writing your markdown here..."></textarea>
             </div>
             
@@ -427,18 +481,26 @@
     <div id="settingsModal" class="modal-bg fixed inset-0 z-50 flex items-center justify-center hidden">
         <div class="modal-content border rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden flex flex-col">
             <div class="flex items-center justify-between px-6 py-4 border-b" style="border-color: var(--border-color);">
-                <h2 class="text-xl font-bold">Settings</h2>
+                <h2 class="text-xl font-bold">Settings <span id="appVersion" class="text-xs font-normal text-gray-500 ml-2"></span></h2>
                 <button onclick="hideSettings()" class="p-2 rounded hover:bg-gray-200">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="p-6 overflow-auto flex-1">
-                <div class="mb-4">
+                <div class="mb-6">
                     <h3 class="font-bold mb-2">Default App</h3>
                     <p class="text-sm mb-3" style="color: var(--text-secondary);">Set MARKone as the default editor for .md files.</p>
                     <button onclick="setAsDefaultApp()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm w-full font-medium transition-colors">
                         Set as Default Markdown App
                     </button>
+                </div>
+
+                <div class="mb-4 pt-4 border-t" style="border-color: var(--border-color)">
+                    <h3 class="font-bold mb-2">Credits & License</h3>
+                    <div class="text-xs text-gray-600 dark:text-gray-400">
+                        Copyright © Josh McCann.<br><br>
+                        Permission is hereby granted to use this software for free for open source and non-commercial purposes. Commercial usage is strictly prohibited without prior permission. Please contact the developer via GitHub for licensing inquiries.
+                    </div>
                 </div>
             </div>
         </div>
@@ -923,7 +985,11 @@
             document.getElementById('cheatsheetModal').classList.add('hidden');
         }
 
-        function showSettings() {
+        async function showSettings() {
+            if (window.electronAPI) {
+                const version = await window.electronAPI.getVersion();
+                document.getElementById('appVersion').textContent = 'v' + version;
+            }
             document.getElementById('settingsModal').classList.remove('hidden');
         }
 
@@ -1030,40 +1096,82 @@
 
             recentFiles.forEach(file => {
                 const btn = document.createElement('button');
-                btn.className = 'dropdown-item w-full text-left px-4 py-2 text-xs truncate recent-item';
-                btn.textContent = file.name;
+                btn.className = 'dropdown-item w-full text-left px-4 py-2 text-xs recent-item flex flex-col';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'truncate w-full font-medium';
+                nameSpan.textContent = file.name;
+                btn.appendChild(nameSpan);
+
+                if (file.path) {
+                    const pathSpan = document.createElement('span');
+                    pathSpan.className = 'truncate w-full text-[10px] opacity-60';
+                    pathSpan.textContent = file.path;
+                    btn.appendChild(pathSpan);
+                }
+
                 btn.onclick = () => loadRecent(file);
                 container.appendChild(btn);
             });
         }
 
-        function addToRecent(name, content) {
-            recentFiles = recentFiles.filter(f => f.name !== name);
-            recentFiles.unshift({ name, content, date: new Date().toISOString() });
-            recentFiles = recentFiles.slice(0, 5); // Keep last 5
+        function addToRecent(name, content, path = null) {
+            // Include path when comparing if available, otherwise just name
+            recentFiles = recentFiles.filter(f => {
+                if (path && f.path) return f.path !== path;
+                return f.name !== name;
+            });
+            recentFiles.unshift({ name, content, path, date: new Date().toISOString() });
+            recentFiles = recentFiles.slice(0, 10); // Keep last 10
             localStorage.setItem('recentFiles', JSON.stringify(recentFiles));
             updateRecentMenu();
         }
 
         function loadRecent(file) {
-            if (confirm('Discard unsaved changes and open "' + file.name + '"?')) {
-                editor.value = file.content;
-                currentFileName = file.name;
-                document.getElementById('currentFileName').textContent = currentFileName;
-                updatePreview();
-                updateStats();
+            if (window.electronAPI && window.electronAPI.openNewWindow) {
+                // Determine if current editor is pristine (empty or unchanged Untitled)
+                const isPristine = (editor.value.trim() === '' && currentFileName === 'Untitled.md' && (!electronFilePath));
+                if (isPristine) {
+                    editor.value = file.content;
+                    currentFileName = file.name;
+                    if (file.path && typeof electronFilePath !== 'undefined') electronFilePath = file.path;
+                    document.getElementById('currentFileName').textContent = currentFileName;
+                    updatePreview();
+                    updateStats();
+                } else {
+                    if (confirm('Discard unsaved changes and open "' + file.name + '"?')) {
+                        editor.value = file.content;
+                        currentFileName = file.name;
+                        if (file.path && typeof electronFilePath !== 'undefined') electronFilePath = file.path;
+                        document.getElementById('currentFileName').textContent = currentFileName;
+                        updatePreview();
+                        updateStats();
+                    }
+                }
+            } else {
+                if (confirm('Discard unsaved changes and open "' + file.name + '"?')) {
+                    editor.value = file.content;
+                    currentFileName = file.name;
+                    document.getElementById('currentFileName').textContent = currentFileName;
+                    updatePreview();
+                    updateStats();
+                }
             }
         }
 
         function fileNew() {
-            if (confirm('Create new file? Unsaved changes will be lost.')) {
-                editor.value = '';
-                currentHandle = null;
-                if (typeof electronFilePath !== 'undefined') electronFilePath = null;
-                currentFileName = "Untitled.md";
-                document.getElementById('currentFileName').textContent = currentFileName;
-                updatePreview();
-                updateStats();
+            if (window.electronAPI && window.electronAPI.openNewWindow) {
+                window.electronAPI.openNewWindow();
+            } else {
+                if (confirm('Create new file? Unsaved changes will be lost.')) {
+                    editor.value = '';
+                    currentHandle = null;
+                    if (typeof electronFilePath !== 'undefined') electronFilePath = null;
+                    currentFileName = "Untitled.md";
+                    document.getElementById('currentFileName').textContent = currentFileName;
+                    updatePreview();
+                    updateStats();
+                }
             }
         }
 
@@ -1091,11 +1199,14 @@
                         editor.value = content;
                         document.getElementById('currentFileName').textContent = currentFileName;
                         updatePreview();
+                        // Cannot reliably get absolute path from input type=file, passing null
+                        addToRecent(currentFileName, editor.value, null);
                     };
                     input.click();
+                    return; // Return early because onchange is async
                 }
                 document.getElementById('currentFileName').textContent = currentFileName;
-                addToRecent(currentFileName, editor.value);
+                addToRecent(currentFileName, editor.value, null); // Browser API doesn't give absolute paths
                 updatePreview();
                 updateStats();
             } catch (err) {
@@ -1130,7 +1241,7 @@
                         content: editor.value
                     });
                     if (result.success) {
-                        addToRecent(currentFileName, editor.value);
+                        addToRecent(currentFileName, editor.value, electronFilePath);
                         showToast('File saved successfully!');
                     } else {
                         alert('Failed to save file: ' + result.error);
@@ -1143,7 +1254,7 @@
                     const writable = await currentHandle.createWritable();
                     await writable.write(editor.value);
                     await writable.close();
-                    addToRecent(currentFileName, editor.value);
+                    addToRecent(currentFileName, editor.value, null);
                     showToast('File saved successfully!');
                 } catch (err) {
                     console.error(err);
@@ -1164,7 +1275,7 @@
                     electronFilePath = result.filePath;
                     currentFileName = result.fileName;
                     document.getElementById('currentFileName').textContent = currentFileName;
-                    addToRecent(currentFileName, editor.value);
+                    addToRecent(currentFileName, editor.value, electronFilePath);
                     showToast('File saved successfully!');
                 }
             } else {
@@ -1190,13 +1301,259 @@
                         URL.revokeObjectURL(url);
                     }
                     document.getElementById('currentFileName').textContent = currentFileName;
-                    addToRecent(currentFileName, editor.value);
+                    addToRecent(currentFileName, editor.value, null);
                     showToast('File saved successfully!');
                 } catch (err) {
                     console.error(err);
                 }
             }
         }
+
+        // Advanced Find and Replace Logic
+        let searchMatches = [];
+        let currentMatchIndex = -1;
+
+        function toggleFindReplace() {
+            const modal = document.getElementById('findReplaceModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                const findInput = document.getElementById('findInput');
+                // Pre-fill with current selection if any
+                const selected = editor.value.substring(editor.selectionStart, editor.selectionEnd);
+                if (selected && selected.indexOf('\n') === -1) {
+                    findInput.value = selected;
+                }
+                findInput.focus();
+                updateSearchMatches();
+            } else {
+                editor.focus();
+            }
+        }
+
+        function getSearchRegex() {
+            let searchText = document.getElementById('findInput').value;
+            if (!searchText) return null;
+
+            const matchCase = document.getElementById('findMatchCase').checked;
+            const wholeWord = document.getElementById('findWholeWord').checked;
+            const useRegex = document.getElementById('findRegex').checked;
+
+            if (!useRegex) {
+                searchText = escapeRegExp(searchText);
+            }
+
+            if (wholeWord) {
+                searchText = `\\b${searchText}\\b`;
+            }
+
+            const flags = matchCase ? 'g' : 'gi';
+            try {
+                return new RegExp(searchText, flags);
+            } catch (e) {
+                return null; // Invalid regex
+            }
+        }
+
+        function updateSearchMatches() {
+            searchMatches = [];
+            currentMatchIndex = -1;
+            const countLabel = document.getElementById('findMatchCount');
+            const findInput = document.getElementById('findInput');
+
+            if (!findInput.value) {
+                countLabel.textContent = 'No results';
+                return;
+            }
+
+            const regex = getSearchRegex();
+            if (!regex) {
+                countLabel.textContent = 'Invalid regex';
+                return;
+            }
+
+            const text = editor.value;
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                searchMatches.push({
+                    start: match.index,
+                    end: match.index + match[0].length,
+                    text: match[0]
+                });
+                // Prevent infinite loops on zero-length matches (e.g., ^ or $)
+                if (regex.lastIndex === match.index) {
+                    regex.lastIndex++;
+                }
+            }
+
+            if (searchMatches.length > 0) {
+                // Find where the cursor currently is to set currentMatchIndex
+                const cursor = editor.selectionStart;
+                for (let i = 0; i < searchMatches.length; i++) {
+                    if (searchMatches[i].start >= cursor) {
+                        currentMatchIndex = i;
+                        break;
+                    }
+                }
+                if (currentMatchIndex === -1) currentMatchIndex = 0;
+
+                countLabel.textContent = `${currentMatchIndex + 1} of ${searchMatches.length}`;
+            } else {
+                countLabel.textContent = 'No results';
+            }
+        }
+
+        function jumpToMatch(index) {
+            if (searchMatches.length === 0) return;
+
+            currentMatchIndex = index;
+            if (currentMatchIndex >= searchMatches.length) currentMatchIndex = 0;
+            if (currentMatchIndex < 0) currentMatchIndex = searchMatches.length - 1;
+
+            const match = searchMatches[currentMatchIndex];
+
+            editor.focus();
+            editor.setSelectionRange(match.start, match.end);
+
+            // Calculate scroll
+            const lineHeight = parseFloat(getComputedStyle(editor).lineHeight);
+            const lines = editor.value.substring(0, match.start).split('\n').length;
+            editor.scrollTop = (lines - 1) * lineHeight - (editor.clientHeight / 2);
+
+            document.getElementById('findMatchCount').textContent = `${currentMatchIndex + 1} of ${searchMatches.length}`;
+        }
+
+        function findNextBtn() {
+            updateSearchMatches();
+            if (searchMatches.length > 0) {
+                let nextIndex = currentMatchIndex + 1;
+                if (nextIndex >= searchMatches.length) nextIndex = 0;
+                jumpToMatch(nextIndex);
+            }
+        }
+
+        function findPrev() {
+            updateSearchMatches();
+            if (searchMatches.length > 0) {
+                let prevIndex = currentMatchIndex - 1;
+                if (prevIndex < 0) prevIndex = searchMatches.length - 1;
+                jumpToMatch(prevIndex);
+            }
+        }
+
+        function replaceTextAdvanced() {
+            if (searchMatches.length === 0) return;
+
+            // Check if current selection is exactly the current match
+            const selStart = editor.selectionStart;
+            const selEnd = editor.selectionEnd;
+            const match = searchMatches[currentMatchIndex];
+
+            if (match && selStart === match.start && selEnd === match.end) {
+                const replaceStr = document.getElementById('replaceInput').value;
+                const text = editor.value;
+
+                editor.value = text.substring(0, match.start) + replaceStr + text.substring(match.end);
+
+                // Set cursor right after replacement
+                editor.setSelectionRange(match.start, match.start + replaceStr.length);
+
+                updatePreview();
+                updateStats();
+                updateSearchMatches();
+
+                // Automatically jump to the next one, which now sits at currentMatchIndex in the array
+                if (searchMatches.length > 0) {
+                    jumpToMatch(currentMatchIndex);
+                } else {
+                    editor.focus();
+                }
+            } else {
+                // If not currently selecting a match, just jump to the next one
+                findNextBtn();
+            }
+        }
+
+        function replaceAllTextAdvanced() {
+            const regex = getSearchRegex();
+            if (!regex) return;
+
+            const replaceStr = document.getElementById('replaceInput').value;
+            const text = editor.value;
+
+            if (regex.test(text)) {
+                editor.value = text.replace(regex, replaceStr);
+                updatePreview();
+                updateStats();
+                updateSearchMatches();
+                showToast('Replaced all occurrences.');
+            } else {
+                showToast('No occurrences found.');
+            }
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+        }
+
+        // Live updating matches
+        document.getElementById('findInput').addEventListener('input', updateSearchMatches);
+        document.getElementById('findMatchCase').addEventListener('change', updateSearchMatches);
+        document.getElementById('findWholeWord').addEventListener('change', updateSearchMatches);
+        document.getElementById('findRegex').addEventListener('change', updateSearchMatches);
+
+        // Allow Enter key to trigger Find Next / Prev
+        document.getElementById('findInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (e.shiftKey) findPrev();
+                else findNextBtn();
+            }
+        });
+
+        document.getElementById('replaceInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                replaceTextAdvanced();
+            }
+        });
+
+        // Make modal draggable
+        const dragHandle = document.getElementById('findReplaceDragHandle');
+        const modal = document.getElementById('findReplaceModal');
+        let isDraggingModal = false;
+        let dragOffsetX, dragOffsetY;
+
+        dragHandle.addEventListener('mousedown', (e) => {
+            isDraggingModal = true;
+            const rect = modal.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDraggingModal) return;
+            const container = document.getElementById('editorContainer').getBoundingClientRect();
+
+            let newX = e.clientX - dragOffsetX;
+            let newY = e.clientY - dragOffsetY;
+
+            // Constrain to window/container
+            if (newX < container.left) newX = container.left;
+            if (newY < container.top) newY = container.top;
+            if (newX + modal.offsetWidth > window.innerWidth) newX = window.innerWidth - modal.offsetWidth;
+            if (newY + modal.offsetHeight > window.innerHeight) newY = window.innerHeight - modal.offsetHeight;
+
+            // modal is positioned absolutely relative to editorContainer
+            modal.style.left = (newX - container.left) + 'px';
+            modal.style.top = (newY - container.top) + 'px';
+            modal.style.right = 'auto'; // Disable initial right placement
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDraggingModal = false;
+            document.body.style.userSelect = '';
+        });
 
         // Handle global shortcuts
         window.addEventListener('keydown', (e) => {
@@ -1205,6 +1562,14 @@
                     case 's': e.preventDefault(); fileSave(); break;
                     case 'o': e.preventDefault(); fileOpen(); break;
                     case 'n': e.preventDefault(); fileNew(); break;
+                    case 'f': e.preventDefault(); toggleFindReplace(); break;
+                    case 'h': e.preventDefault(); toggleFindReplace(); document.getElementById('replaceInput').focus(); break;
+                }
+            }
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('findReplaceModal');
+                if (!modal.classList.contains('hidden')) {
+                    toggleFindReplace();
                 }
             }
         });
@@ -1243,8 +1608,11 @@
             reader.onload = function(event) {
                 editor.value = event.target.result;
                 currentFileName = file.name;
+                if (file.path && typeof electronFilePath !== 'undefined') {
+                    electronFilePath = file.path;
+                }
                 document.getElementById('currentFileName').textContent = currentFileName;
-                addToRecent(currentFileName, editor.value);
+                addToRecent(currentFileName, editor.value, file.path || null);
                 updatePreview();
                 updateStats();
             };
@@ -1279,7 +1647,7 @@
                 document.getElementById('currentFileName').textContent = currentFileName;
                 updatePreview();
                 updateStats();
-                addToRecent(currentFileName, data.content);
+                addToRecent(currentFileName, data.content, data.filePath);
             });
         }
 
