@@ -9,7 +9,8 @@
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
-    "build:all": "electron-builder -mwl"
+    "build:all": "electron-builder -mwl",
+    "test": "playwright test"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "author": "Josh McCann",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "electron": "^43.2.0",
     "electron-builder": "^26.15.3",
     "sharp": "^0.35.3"
