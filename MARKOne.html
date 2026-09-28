@@ -1481,6 +1481,7 @@
             const text = editor.value;
 
             if (regex.test(text)) {
+                regex.lastIndex = 0; // Fix replace-all lastIndex after .test() advances it
                 editor.value = text.replace(regex, replaceStr);
                 updatePreview();
                 updateStats();
