@@ -277,7 +277,7 @@
                     <i class="fas fa-font"></i>
                     <span id="textColorIndicator" class="block h-1 w-full mt-0.5 rounded" style="background-color: #ef4444;"></span>
                 </button>
-                <div id="textColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2">
+                <div id="textColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2 w-max">
                     <div class="grid grid-cols-6 gap-1">
                         <button onclick="applyTextColor('#ef4444')" class="w-6 h-6 rounded" style="background-color: #ef4444;"></button>
                         <button onclick="applyTextColor('#f97316')" class="w-6 h-6 rounded" style="background-color: #f97316;"></button>
@@ -292,6 +292,12 @@
                         <button onclick="applyTextColor('#06b6d4')" class="w-6 h-6 rounded" style="background-color: #06b6d4;"></button>
                         <button onclick="applyTextColor('#84cc16')" class="w-6 h-6 rounded" style="background-color: #84cc16;"></button>
                     </div>
+                    <div class="mt-2 border-t pt-2" style="border-color: var(--border-color)">
+                        <label class="flex items-center gap-2 text-xs" style="color: var(--text-secondary)">
+                            <span>Custom:</span>
+                            <input type="color" onchange="applyTextColor(this.value)" class="w-full h-6 p-0 border-0 rounded cursor-pointer bg-transparent">
+                        </label>
+                    </div>
                 </div>
             </div>
             
@@ -301,7 +307,7 @@
                     <i class="fas fa-highlighter"></i>
                     <span id="highlightColorIndicator" class="block h-1 w-full mt-0.5 rounded" style="background-color: #fef08a;"></span>
                 </button>
-                <div id="highlightColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2">
+                <div id="highlightColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2 w-max">
                     <div class="grid grid-cols-6 gap-1">
                         <button onclick="applyHighlightColor('#fef08a')" class="w-6 h-6 rounded" style="background-color: #fef08a;"></button>
                         <button onclick="applyHighlightColor('#bbf7d0')" class="w-6 h-6 rounded" style="background-color: #bbf7d0;"></button>
@@ -316,6 +322,12 @@
                         <button onclick="applyHighlightColor('#c4b5fd')" class="w-6 h-6 rounded" style="background-color: #c4b5fd;"></button>
                         <button onclick="applyHighlightColor('#99f6e4')" class="w-6 h-6 rounded" style="background-color: #99f6e4;"></button>
                     </div>
+                    <div class="mt-2 border-t pt-2" style="border-color: var(--border-color)">
+                        <label class="flex items-center gap-2 text-xs" style="color: var(--text-secondary)">
+                            <span>Custom:</span>
+                            <input type="color" onchange="applyHighlightColor(this.value)" class="w-full h-6 p-0 border-0 rounded cursor-pointer bg-transparent">
+                        </label>
+                    </div>
                 </div>
             </div>
             
@@ -325,7 +337,7 @@
                     <i class="fas fa-fill-drip"></i>
                     <span id="bgColorIndicator" class="block h-1 w-full mt-0.5 rounded" style="background-color: #dbeafe;"></span>
                 </button>
-                <div id="bgColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2">
+                <div id="bgColorDropdown" class="color-picker-dropdown absolute top-full left-0 mt-1 border rounded-lg shadow-lg z-50 hidden p-2 w-max">
                     <div class="grid grid-cols-6 gap-1">
                         <button onclick="applyBgColor('#fee2e2')" class="w-6 h-6 rounded" style="background-color: #fee2e2;"></button>
                         <button onclick="applyBgColor('#ffedd5')" class="w-6 h-6 rounded" style="background-color: #ffedd5;"></button>
@@ -339,6 +351,12 @@
                         <button onclick="applyBgColor('#cffafe')" class="w-6 h-6 rounded" style="background-color: #cffafe;"></button>
                         <button onclick="applyBgColor('#ecfccb')" class="w-6 h-6 rounded" style="background-color: #ecfccb;"></button>
                         <button onclick="applyBgColor('#ffffff')" class="w-6 h-6 rounded border" style="background-color: #ffffff;"></button>
+                    </div>
+                    <div class="mt-2 border-t pt-2" style="border-color: var(--border-color)">
+                        <label class="flex items-center gap-2 text-xs" style="color: var(--text-secondary)">
+                            <span>Custom:</span>
+                            <input type="color" onchange="applyBgColor(this.value)" class="w-full h-6 p-0 border-0 rounded cursor-pointer bg-transparent">
+                        </label>
                     </div>
                 </div>
             </div>
