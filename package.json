@@ -4,7 +4,6 @@
   "description": "MARKone - A Simple, Easy To Use Markdown Editor",
   "main": "main.js",
   "scripts": {
-    "postinstall": "node fix-pwsh.js",
     "start": "electron .",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
