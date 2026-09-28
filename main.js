@@ -2,8 +2,9 @@ const { app, BrowserWindow, ipcMain, dialog, session, Menu, MenuItem } = require
 const path = require('path');
 const fs = require('fs');
 
-let mainWindow = null;
+let windows = new Set();
 let fileToOpen = null;
+let isFirstWindowCreated = false;
 
 const gotTheLock = app.requestSingleInstanceLock();
 
@@ -12,14 +13,15 @@ if (!gotTheLock) {
 } else {
     app.on('second-instance', (event, commandLine, workingDirectory) => {
         // Someone tried to run a second instance, we should focus our window.
-        if (mainWindow) {
-            if (mainWindow.isMinimized()) mainWindow.restore();
-            mainWindow.focus();
+        if (windows.size > 0) {
+            const firstWin = windows.values().next().value;
+            if (firstWin.isMinimized()) firstWin.restore();
+            firstWin.focus();
 
             // Find the file path from the new command line arguments
             for (let i = 1; i < commandLine.length; i++) {
                 if (commandLine[i].endsWith('.md') && fs.existsSync(commandLine[i])) {
-                    openAndSendFile(commandLine[i]);
+                    openAndSendFile(firstWin, commandLine[i]);
                     break;
                 }
             }
@@ -29,8 +31,9 @@ if (!gotTheLock) {
     // Handle macOS open-file event
     app.on('open-file', (event, filePath) => {
         event.preventDefault();
-        if (mainWindow) {
-            openAndSendFile(filePath);
+        if (windows.size > 0) {
+            const firstWin = windows.values().next().value;
+            openAndSendFile(firstWin, filePath);
         } else {
             fileToOpen = filePath;
         }
@@ -63,7 +66,7 @@ if (!gotTheLock) {
 }
 
 function createWindow() {
-    mainWindow = new BrowserWindow({
+    let win = new BrowserWindow({
         width: 1400,
         height: 900,
         show: false, // Wait until ready-to-show to prevent blank flash
@@ -75,15 +78,17 @@ function createWindow() {
         }
     });
 
-    mainWindow.setMenu(null);
-    mainWindow.maximize();
-    mainWindow.loadFile('MARKOne.html');
+    windows.add(win);
 
-    mainWindow.once('ready-to-show', () => {
-        mainWindow.show();
+    win.setMenu(null);
+    win.maximize();
+    win.loadFile('MARKOne.html');
+
+    win.once('ready-to-show', () => {
+        win.show();
     });
 
-    mainWindow.webContents.on('context-menu', (event, params) => {
+    win.webContents.on('context-menu', (event, params) => {
         const menu = new Menu();
 
         // Add spelling suggestions
@@ -91,7 +96,7 @@ function createWindow() {
             for (const suggestion of params.dictionarySuggestions) {
                 menu.append(new MenuItem({
                     label: suggestion,
-                    click: () => mainWindow.webContents.replaceMisspelling(suggestion)
+                    click: () => win.webContents.replaceMisspelling(suggestion)
                 }));
             }
             menu.append(new MenuItem({ type: 'separator' }));
@@ -101,7 +106,7 @@ function createWindow() {
         if (params.misspelledWord) {
             menu.append(new MenuItem({
                 label: 'Add to dictionary',
-                click: () => mainWindow.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord)
+                click: () => win.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord)
             }));
             menu.append(new MenuItem({ type: 'separator' }));
         }
@@ -116,39 +121,44 @@ function createWindow() {
         menu.popup();
     });
 
-    mainWindow.webContents.on('did-finish-load', () => {
-        // Handle Windows/Linux command-line arguments for file opening
-        const args = process.argv;
-        let filePath = fileToOpen;
+    win.webContents.on('did-finish-load', () => {
+        if (!isFirstWindowCreated) {
+            isFirstWindowCreated = true;
 
-        // Find the first argument that is a .md file, ignoring the executable and electron script paths
-        if (!filePath && args.length >= 2) {
-            for (let i = 1; i < args.length; i++) {
-                if (args[i].endsWith('.md') && fs.existsSync(args[i])) {
-                    filePath = args[i];
-                    break;
+            // Handle Windows/Linux command-line arguments for file opening
+            const args = process.argv;
+            let filePath = fileToOpen;
+
+            // Find the first argument that is a .md file, ignoring the executable and electron script paths
+            if (!filePath && args.length >= 2) {
+                for (let i = 1; i < args.length; i++) {
+                    if (args[i].endsWith('.md') && fs.existsSync(args[i])) {
+                        filePath = args[i];
+                        break;
+                    }
                 }
             }
-        }
 
-        if (filePath) {
-            openAndSendFile(filePath);
-            fileToOpen = null; // reset
+            if (filePath) {
+                openAndSendFile(win, filePath);
+                fileToOpen = null; // reset
+            }
         }
     });
 
-    mainWindow.on('closed', () => {
-        mainWindow = null;
+    win.on('closed', () => {
+        windows.delete(win);
+        win = null;
     });
 }
 
-function openAndSendFile(filePath) {
-    if (!mainWindow) return;
+function openAndSendFile(targetWin, filePath) {
+    if (!targetWin) return;
     try {
         const content = fs.readFileSync(filePath, 'utf-8');
         const fileName = path.basename(filePath);
-        mainWindow.webContents.send('load-file', { fileName, content, filePath });
-        mainWindow.setTitle(`MARKone - ${fileName}`);
+        targetWin.webContents.send('load-file', { fileName, content, filePath });
+        targetWin.setTitle(`MARKone - ${fileName}`);
     } catch (err) {
         console.error('Failed to open file:', err);
     }
@@ -156,7 +166,8 @@ function openAndSendFile(filePath) {
 
 // IPC handlers for saving files
 ipcMain.handle('save-file-dialog', async (event, { content, defaultPath }) => {
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+    const senderWin = BrowserWindow.fromWebContents(event.sender);
+    const { canceled, filePath } = await dialog.showSaveDialog(senderWin, {
         title: 'Save Markdown File',
         defaultPath: defaultPath || 'Untitled.md',
         filters: [
@@ -180,6 +191,15 @@ ipcMain.handle('save-file', async (event, { filePath, content }) => {
         console.error(err);
         return { success: false, error: err.message };
     }
+});
+
+ipcMain.handle('new-window', () => {
+    createWindow();
+    return { success: true };
+});
+
+ipcMain.handle('get-version', () => {
+    return app.getVersion();
 });
 
 ipcMain.handle('set-as-default', async () => {
