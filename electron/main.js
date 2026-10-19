@@ -77,7 +77,7 @@ function createWindow() {
 
     mainWindow.setMenu(null);
     mainWindow.maximize();
-    mainWindow.loadFile('MARKOne.html');
+    mainWindow.loadFile(path.join(__dirname, '../MARKOne.html'));
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();

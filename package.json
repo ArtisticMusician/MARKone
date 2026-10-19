@@ -2,8 +2,10 @@
   "name": "markone",
   "version": "1.0.5",
   "description": "MARKone - A Simple, Easy To Use Markdown Editor",
-  "main": "main.js",
+  "main": "electron/main.js",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
     "start": "electron .",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
@@ -24,7 +26,8 @@
   "devDependencies": {
     "electron": "^43.2.0",
     "electron-builder": "^26.15.3",
-    "sharp": "^0.35.3"
+    "sharp": "^0.35.3",
+    "vite": "^8.3.4"
   },
   "build": {
     "appId": "com.markone.editor",
@@ -72,5 +75,10 @@
       "perMachine": true,
       "include": "build/installer.nsh"
     }
-  }
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ArtisticMusician/MARKone/issues"
+  },
+  "homepage": "https://github.com/ArtisticMusician/MARKone#readme"
 }

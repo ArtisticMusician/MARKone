@@ -1,0 +1,7 @@
+/* App module styles will go here */
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
