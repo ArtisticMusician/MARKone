@@ -77,7 +77,17 @@ function createWindow() {
 
     mainWindow.setMenu(null);
     mainWindow.maximize();
-    mainWindow.loadFile('MARKOne.html');
+
+    if (process.env.VITE_DEV_SERVER_URL) {
+        mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
+        mainWindow.webContents.openDevTools();
+    } else if (!app.isPackaged && process.env.NODE_ENV !== 'production') {
+        // Fallback for dev if env var isn't explicitly set but we aren't packaged
+        mainWindow.loadURL('http://localhost:3000');
+        mainWindow.webContents.openDevTools();
+    } else {
+        mainWindow.loadFile(path.join(__dirname, '../dist-web/index.html'));
+    }
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
